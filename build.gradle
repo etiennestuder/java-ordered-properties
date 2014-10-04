@@ -1,0 +1,10 @@
+apply plugin: 'groovy'
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  testCompile "org.codehaus.groovy:groovy-all:2.3.7"
+  testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
+}
