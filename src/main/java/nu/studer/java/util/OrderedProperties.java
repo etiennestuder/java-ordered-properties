@@ -23,68 +23,109 @@ import java.util.Vector;
  *
  * @see Properties
  */
+@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 public final class OrderedProperties {
 
-    // todo (etst) deal with 'synchronized'
+    private static final Object LOCK = new Object();
 
-    private final Map<String, String> properties = new LinkedHashMap<String, String>();
+    private final Map<String, String> properties;
+
+    public OrderedProperties() {
+        properties = new LinkedHashMap<String, String>();
+    }
 
     public String getProperty(String key) {
-        return properties.get(key);
+        synchronized (LOCK) {
+            return properties.get(key);
+        }
     }
 
     public String getProperty(String key, String defaultValue) {
-        String value = properties.get(key);
-        return (value == null) ? defaultValue : value;
+        synchronized (LOCK) {
+            String value = properties.get(key);
+            return (value == null) ? defaultValue : value;
+        }
     }
 
     public String setProperty(String key, String value) {
-        return properties.put(key, value);
+        synchronized (LOCK) {
+            return properties.put(key, value);
+        }
     }
 
     public boolean isEmpty() {
-        return properties.isEmpty();
+        synchronized (LOCK) {
+            return properties.isEmpty();
+        }
     }
 
     public Enumeration<?> propertyNames() {
-        return new Vector<String>(properties.keySet()).elements();
+        synchronized (LOCK) {
+            return new Vector<String>(properties.keySet()).elements();
+        }
     }
 
     public Set<String> stringPropertyNames() {
-        return new LinkedHashSet<String>(properties.keySet());
+        synchronized (LOCK) {
+            return new LinkedHashSet<String>(properties.keySet());
+        }
     }
 
     public void load(InputStream stream) throws IOException {
-        new CustomProperties().load(stream);
+        CustomProperties customProperties = new CustomProperties();
+        synchronized (LOCK) {
+            customProperties.load(stream);
+        }
     }
 
     public void load(Reader reader) throws IOException {
-        new CustomProperties().load(reader);
+        CustomProperties customProperties = new CustomProperties();
+        synchronized (LOCK) {
+            customProperties.load(reader);
+        }
     }
 
+    @SuppressWarnings("DuplicateThrows")
     public void loadFromXML(InputStream stream) throws IOException, InvalidPropertiesFormatException {
-        new CustomProperties().loadFromXML(stream);
+        CustomProperties customProperties = new CustomProperties();
+        synchronized (LOCK) {
+            customProperties.loadFromXML(stream);
+        }
     }
 
     public void store(OutputStream stream, String comments) throws IOException {
-        new CustomProperties().store(stream, comments);
+        CustomProperties customProperties = new CustomProperties();
+        synchronized (LOCK) {
+            customProperties.store(stream, comments);
+        }
     }
 
     public void store(Writer writer, String comments) throws IOException {
-        new CustomProperties().store(writer, comments);
+        CustomProperties customProperties = new CustomProperties();
+        synchronized (LOCK) {
+            customProperties.store(writer, comments);
+        }
     }
 
     public void storeToXML(OutputStream stream, String comment) throws IOException {
-        new CustomProperties().storeToXML(stream, comment);
+        CustomProperties customProperties = new CustomProperties();
+        synchronized (LOCK) {
+            customProperties.storeToXML(stream, comment);
+        }
     }
 
     public void storeToXML(OutputStream stream, String comment, String encoding) throws IOException {
-        new CustomProperties().storeToXML(stream, comment, encoding);
+        CustomProperties customProperties = new CustomProperties();
+        synchronized (LOCK) {
+            customProperties.storeToXML(stream, comment, encoding);
+        }
     }
 
     @Override
     public String toString() {
-        return properties.toString();
+        synchronized (LOCK) {
+            return properties.toString();
+        }
     }
 
     private final class CustomProperties extends Properties {

@@ -171,7 +171,6 @@ a=111
 
         when:
         props.storeToXML(stream, "foo", "ISO-8859-1")
-        println stream.toString()
 
         then:
         stream.toString() == """\
