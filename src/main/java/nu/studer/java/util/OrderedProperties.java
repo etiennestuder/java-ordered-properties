@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.Writer;
 import java.util.Enumeration;
 import java.util.InvalidPropertiesFormatException;
 import java.util.LinkedHashMap;
@@ -23,6 +24,8 @@ import java.util.Vector;
  * @see Properties
  */
 public final class OrderedProperties {
+
+    // todo (etst) deal with 'synchronized'
 
     private final Map<String, String> properties = new LinkedHashMap<String, String>();
 
@@ -51,50 +54,67 @@ public final class OrderedProperties {
         return new LinkedHashSet<String>(properties.keySet());
     }
 
-    public synchronized void load(InputStream stream) throws IOException {
-        new Properties() {
-            @Override
-            public Object put(Object key, Object value) {
-                return properties.put((String) key, (String) value);
-            }
-        }.load(stream);
+    public void load(InputStream stream) throws IOException {
+        new CustomProperties().load(stream);
     }
 
-    public synchronized void load(Reader reader) throws IOException {
-        new Properties() {
-            @Override
-            public Object put(Object key, Object value) {
-                return properties.put((String) key, (String) value);
-            }
-        }.load(reader);
+    public void load(Reader reader) throws IOException {
+        new CustomProperties().load(reader);
     }
 
-    public synchronized void loadFromXML(InputStream stream) throws IOException, InvalidPropertiesFormatException {
-        new Properties() {
-            @Override
-            public Object put(Object key, Object value) {
-                return properties.put((String) key, (String) value);
-            }
-        }.loadFromXML(stream);
+    public void loadFromXML(InputStream stream) throws IOException, InvalidPropertiesFormatException {
+        new CustomProperties().loadFromXML(stream);
     }
 
-    public void store(OutputStream out, String comments) throws IOException {
-        new Properties() {
-            @Override
-            public synchronized Enumeration<Object> keys() {
-                return new Vector<Object>(properties.keySet()).elements();
-            }
+    public void store(OutputStream stream, String comments) throws IOException {
+        new CustomProperties().store(stream, comments);
+    }
 
-            @Override
-            public synchronized Object get(Object key) {
-                return properties.get(key);
-            }
-        }.store(out, comments);
+    public void store(Writer writer, String comments) throws IOException {
+        new CustomProperties().store(writer, comments);
+    }
+
+    public void storeToXML(OutputStream stream, String comment) throws IOException {
+        new CustomProperties().storeToXML(stream, comment);
+    }
+
+    public void storeToXML(OutputStream stream, String comment, String encoding) throws IOException {
+        new CustomProperties().storeToXML(stream, comment, encoding);
     }
 
     @Override
     public String toString() {
         return properties.toString();
+    }
+
+    private final class CustomProperties extends Properties {
+
+        @Override
+        public Object get(Object key) {
+            return properties.get(key);
+        }
+
+        @Override
+        public Object put(Object key, Object value) {
+            return properties.put((String) key, (String) value);
+        }
+
+        @Override
+        public String getProperty(String key) {
+            return properties.get(key);
+        }
+
+        @Override
+        public Enumeration<Object> keys() {
+            return new Vector<Object>(properties.keySet()).elements();
+        }
+
+        @SuppressWarnings("NullableProblems")
+        @Override
+        public Set<Object> keySet() {
+            return new LinkedHashSet<Object>(properties.keySet());
+        }
+
     }
 
 }

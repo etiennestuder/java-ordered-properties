@@ -121,6 +121,71 @@ a=111
 """
     }
 
+    def "properties remain ordered when writing to writer"() {
+        setup:
+        props.setProperty("b", "222")
+        props.setProperty("c", "333")
+        props.setProperty("a", "111")
+        def writer = new StringWriter()
+
+        when:
+        props.store(writer, null)
+
+        then:
+        writer.toString().endsWith """
+b=222
+c=333
+a=111
+"""
+    }
+
+    def "properties remain ordered when writing to stream as xml"() {
+        setup:
+        props.setProperty("b", "222")
+        props.setProperty("c", "333")
+        props.setProperty("a", "111")
+        def stream = new ByteArrayOutputStream()
+
+        when:
+        props.storeToXML(stream, "foo")
+
+        then:
+        stream.toString() == """\
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>foo</comment>
+<entry key="b">222</entry>
+<entry key="c">333</entry>
+<entry key="a">111</entry>
+</properties>
+"""
+    }
+
+    def "properties remain ordered when writing to stream as xml with custom encoding"() {
+        setup:
+        props.setProperty("b", "222")
+        props.setProperty("c", "333")
+        props.setProperty("a", "111")
+        def stream = new ByteArrayOutputStream()
+
+        when:
+        props.storeToXML(stream, "foo", "ISO-8859-1")
+        println stream.toString()
+
+        then:
+        stream.toString() == """\
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>foo</comment>
+<entry key="b">222</entry>
+<entry key="c">333</entry>
+<entry key="a">111</entry>
+</properties>
+"""
+    }
+
     private static Reader asReader(String text) {
         new StringReader(text)
     }
