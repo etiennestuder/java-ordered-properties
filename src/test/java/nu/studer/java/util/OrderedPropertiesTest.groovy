@@ -250,8 +250,48 @@ a=111
 """
     }
 
+  def "date can be suppressed when writing to stream with long comment"() {
+    setup:
+    props = OrderedProperties.withoutWritingDateComment()
+    props.setProperty("b", "222")
+    props.setProperty("c", "333")
+    props.setProperty("a", "111")
+    def stream = new ByteArrayOutputStream()
 
-    private static Reader asReader(String text) {
+    when:
+    props.store(stream, "this is a very long comment that needs to be added when storing the properties to a stream")
+
+    then:
+    stream.toString() == """\
+#this is a very long comment that needs to be added when storing the properties to a stream
+b=222
+c=333
+a=111
+"""
+  }
+
+  def "date can be suppressed when writing to stream with multi-line comment"() {
+    setup:
+    props = OrderedProperties.withoutWritingDateComment()
+    props.setProperty("b", "222")
+    props.setProperty("c", "333")
+    props.setProperty("a", "111")
+    def stream = new ByteArrayOutputStream()
+
+    when:
+    props.store(stream, "this is some very long comment that spans multiple lines and\nneeds to be added when storing the properties to a stream")
+
+    then:
+    stream.toString() == """\
+#this is some very long comment that spans multiple lines and
+#needs to be added when storing the properties to a stream
+b=222
+c=333
+a=111
+"""
+  }
+
+  private static Reader asReader(String text) {
         new StringReader(text)
     }
 
