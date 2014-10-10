@@ -327,7 +327,7 @@ a=111
     jdkProperties.getProperty("a") == "111"
   }
 
-  def "is java.io.Serializable"() {
+  def "properties remain ordered when serializing"() {
     setup:
     props.setProperty("b", "222")
     props.setProperty("c", "333")
@@ -344,6 +344,27 @@ a=111
     result.getProperty("b") == "222"
     result.getProperty("c") == "333"
     result.getProperty("a") == "111"
+    result.getProperty("d") == null
+  }
+
+  def "properties remain ordered when serializing with custom comparator"() {
+    setup:
+    props = new OrderedPropertiesBuilder().withOrdering(String.CASE_INSENSITIVE_ORDER).build()
+    props.setProperty("b", "222")
+    props.setProperty("c", "333")
+    props.setProperty("a", "111")
+
+    when:
+    def outStream = new ByteArrayOutputStream()
+    new ObjectOutputStream(outStream).writeObject(props)
+    OrderedProperties result = new ObjectInputStream(new ByteArrayInputStream(outStream.toByteArray())).readObject() as OrderedProperties
+
+    then:
+    result.size() == 3
+    result.propertyNames().toList() == ["a", "b", "c"]
+    result.getProperty("a") == "111"
+    result.getProperty("b") == "222"
+    result.getProperty("c") == "333"
     result.getProperty("d") == null
   }
 
