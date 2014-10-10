@@ -201,6 +201,21 @@ public final class OrderedProperties implements Serializable {
     }
 
     /**
+     * Convert this instance to a {@link Properties} instance.
+     *
+     * @return the {@link Properties} instance
+     */
+    public Properties toJdkProperties() {
+        Properties jdkProperties = new Properties();
+        synchronized (LOCK) {
+            for (Map.Entry<String, String> entry : this.properties.entrySet()) {
+                jdkProperties.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return jdkProperties;
+    }
+
+    /**
      * See {@link Properties#toString()}.
      */
     @Override
@@ -225,21 +240,6 @@ public final class OrderedProperties implements Serializable {
 
     private void readObjectNoData() throws InvalidObjectException {
         throw new InvalidObjectException("Stream data required");
-    }
-
-    /**
-     * Convert this instance to a {@link Properties} instance.
-     *
-     * @return the {@link Properties} instance
-     */
-    public Properties toJdkProperties() {
-        Properties jdkProperties = new Properties();
-        synchronized (LOCK) {
-            for (Map.Entry<String, String> entry : this.properties.entrySet()) {
-                jdkProperties.put(entry.getKey(), entry.getValue());
-            }
-        }
-        return jdkProperties;
     }
 
     /**
