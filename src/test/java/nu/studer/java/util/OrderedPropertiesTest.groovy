@@ -310,7 +310,7 @@ a=111
 """
   }
 
-  def "convert to java.util.Properties"() {
+  def "can be converted to java.util.Properties"() {
     setup:
     props.setProperty("b", "222")
     props.setProperty("c", "333")
@@ -321,9 +321,29 @@ a=111
 
     then:
     jdkProperties.size() == 3
-    props.getProperty("b") == "222"
-    props.getProperty("c") == "333"
-    props.getProperty("a") == "111"
+    jdkProperties.getProperty("b") == "222"
+    jdkProperties.getProperty("c") == "333"
+    jdkProperties.getProperty("a") == "111"
+  }
+
+  def "is java.io.Serializable"() {
+    setup:
+    props.setProperty("b", "222")
+    props.setProperty("c", "333")
+    props.setProperty("a", "111")
+
+    when:
+    def outStream = new ByteArrayOutputStream()
+    new ObjectOutputStream(outStream).writeObject(props)
+    OrderedProperties result = new ObjectInputStream(new ByteArrayInputStream(outStream.toByteArray())).readObject() as OrderedProperties
+
+    then:
+//    result.size() == 3
+    result.propertyNames().toList() == ["b", "c", "a"]
+    result.getProperty("b") == "222"
+    result.getProperty("c") == "333"
+    result.getProperty("a") == "111"
+    result.getProperty("d") == null
   }
 
   private static Reader asReader(String text) {

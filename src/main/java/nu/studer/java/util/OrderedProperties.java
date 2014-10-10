@@ -3,9 +3,13 @@ package nu.studer.java.util;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.Serializable;
 import java.io.Writer;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -31,12 +35,14 @@ import java.util.Vector;
  * @see Properties
  */
 @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-public final class OrderedProperties {
+public final class OrderedProperties implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private static final Object LOCK = new Object();
 
-    private final Map<String, String> properties;
-    private final boolean suppressDate;
+    private transient Map<String, String> properties;
+    private transient boolean suppressDate;
 
     /**
      * Creates a new instance that will keep the properties in the order they have been added. Other than
@@ -193,6 +199,23 @@ public final class OrderedProperties {
         synchronized (LOCK) {
             return properties.toString();
         }
+    }
+
+    private void writeObject(ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
+        stream.writeObject(properties);
+        stream.writeBoolean(suppressDate);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        properties = (Map<String, String>) stream.readObject();
+        suppressDate = stream.readBoolean();
+    }
+
+    private void readObjectNoData() throws InvalidObjectException {
+        throw new InvalidObjectException("Stream data required");
     }
 
     /**
