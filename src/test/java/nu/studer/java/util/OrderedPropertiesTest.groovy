@@ -11,6 +11,7 @@ class OrderedPropertiesTest extends Specification {
   def "empty properties"() {
     setup:
     assert props.isEmpty()
+    assert props.size() == 0
   }
 
   def "get property without default value specified"() {
@@ -338,7 +339,7 @@ a=111
     OrderedProperties result = new ObjectInputStream(new ByteArrayInputStream(outStream.toByteArray())).readObject() as OrderedProperties
 
     then:
-//    result.size() == 3
+    result.size() == 3
     result.propertyNames().toList() == ["b", "c", "a"]
     result.getProperty("b") == "222"
     result.getProperty("c") == "333"

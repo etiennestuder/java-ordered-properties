@@ -86,6 +86,15 @@ public final class OrderedProperties implements Serializable {
     }
 
     /**
+     * See {@link Properties#size()}.
+     */
+    public int size() {
+        synchronized (LOCK) {
+            return properties.size();
+        }
+    }
+
+    /**
      * See {@link Properties#isEmpty()}.
      */
     public boolean isEmpty() {
