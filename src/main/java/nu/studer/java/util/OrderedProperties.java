@@ -123,6 +123,15 @@ public final class OrderedProperties implements Serializable {
     }
 
     /**
+     * See {@link java.util.Properties#entrySet()}.
+     */
+    public Set<Map.Entry<String, String>> entrySet() {
+        synchronized (LOCK) {
+            return new LinkedHashSet<Map.Entry<String, String>>(properties.entrySet());
+        }
+    }
+
+    /**
      * See {@link Properties#load(InputStream)}.
      */
     public void load(InputStream stream) throws IOException {

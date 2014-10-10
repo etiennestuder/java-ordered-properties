@@ -311,6 +311,21 @@ a=111
 """
   }
 
+  def "properties remain ordered when getting the entrySet"() {
+    setup:
+    props.setProperty("b", "222")
+    props.setProperty("c", "333")
+    props.setProperty("a", "111")
+
+    when:
+    Set<Map.Entry<String, String>> entrySet = props.entrySet()
+
+    then:
+    assert entrySet.size() == 3
+    assert entrySet.collect { def entry -> entry.key } == ["b", "c", "a"]
+    assert entrySet.collect { def entry -> entry.value } == ["222", "333", "111"]
+  }
+
   def "can be converted to java.util.Properties"() {
     setup:
     props.setProperty("b", "222")
