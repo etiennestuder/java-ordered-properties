@@ -35,11 +35,14 @@ public final class OrderedProperties {
     private final Map<String, String> properties;
     private final boolean suppressDate;
 
+    /**
+     * Creates a new instance that will keep the properties in the order they have been added.
+     */
     public OrderedProperties() {
         this(false);
     }
 
-    public OrderedProperties(boolean suppressDate) {
+    private OrderedProperties(boolean suppressDate) {
         this.properties = new LinkedHashMap<String, String>();
         this.suppressDate = suppressDate;
     }
@@ -144,6 +147,15 @@ public final class OrderedProperties {
         synchronized (LOCK) {
             return properties.toString();
         }
+    }
+
+    /**
+     * Creates a new instance that will omit the date comment when writing the properties to a stream.
+     *
+     * @return a new instance
+     */
+    public static OrderedProperties withoutWritingDateComment() {
+        return new OrderedProperties(true);
     }
 
     private final class CustomProperties extends Properties {
