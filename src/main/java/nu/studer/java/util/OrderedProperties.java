@@ -19,9 +19,12 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 /**
- * This class provides a drop-in replacement for the java.util.Properties class. It fixes the design flaw of using inheritance over composition, while keeping up the same APIs as
- * the original class. As additional functionality, this class keeps its properties in a well-defined order. By default, the order is the one in which the individual properties
- * have been added, either through explicit API calls or through reading them top-to-bottom from a properties file.
+ * This class provides a drop-in replacement for the java.util.Properties class. It fixes the design flaw
+ * of using inheritance over composition, while keeping up the same APIs as the original class. As additional
+ * functionality, this class keeps its properties in a well-defined order. By default, the order is the one
+ * in which the individual properties have been added, either through explicit API calls or through reading
+ * them top-to-bottom from a properties file. Also, writing the comment that contains the current date when
+ * storing the properties can be suppressed.
  *
  * @see Properties
  */
@@ -34,7 +37,8 @@ public final class OrderedProperties {
     private final boolean suppressDate;
 
     /**
-     * Creates a new instance that will keep the properties in the order they have been added.
+     * Creates a new instance that will keep the properties in the order they have been added. Other than
+     * the ordering of the keys, this instance behaves like an instance of the {@link Properties} class.
      */
     public OrderedProperties() {
         this(new LinkedHashMap<String, String>(), false);
@@ -148,21 +152,42 @@ public final class OrderedProperties {
     }
 
     /**
-     * Creates a new instance that will omit the date comment when writing the properties to a stream.
-     *
-     * @return a new instance
+     * Builder for {@link OrderedProperties} instances.
      */
-    public static OrderedProperties withoutWritingDateComment() {
-        return new OrderedProperties(new LinkedHashMap<String, String>(), true);
-    }
+    public static final class OrderedPropertiesBuilder {
 
-    /**
-     * Creates a new instance that will omit the date comment when writing the properties to a stream.
-     *
-     * @return a new instance
-     */
-    public static OrderedProperties withOrdering(Comparator<? super String> comparator) {
-        return new OrderedProperties(new TreeMap<String, String>(comparator), false);
+        private Comparator<? super String> comparator;
+        private boolean suppressDate;
+
+        /**
+         * Use a custom ordering of the keys.
+         *
+         * @param comparator the ordering to apply on the keys
+         * @return the builder
+         */
+        public OrderedPropertiesBuilder withOrdering(Comparator<? super String> comparator) {
+            this.comparator = comparator;
+            return this;
+        }
+
+        /**
+         * Suppress the comment that contains the current date when storing the properties.
+         *
+         * @param suppressDate whether to suppress the comment that contains the current date
+         * @return the builder
+         */
+        public OrderedPropertiesBuilder suppressDateInComment(boolean suppressDate) {
+            this.suppressDate = suppressDate;
+            return this;
+        }
+
+        public OrderedProperties build() {
+            Map<String, String> properties = (this.comparator != null) ?
+                    new TreeMap<String, String>(comparator) :
+                    new LinkedHashMap<String, String>();
+            return new OrderedProperties(properties, suppressDate);
+        }
+
     }
 
     private final class CustomProperties extends Properties {

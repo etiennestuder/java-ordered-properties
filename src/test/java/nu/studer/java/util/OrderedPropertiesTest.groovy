@@ -2,6 +2,8 @@ package nu.studer.java.util
 
 import spock.lang.Specification
 
+import static nu.studer.java.util.OrderedProperties.OrderedPropertiesBuilder
+
 class OrderedPropertiesTest extends Specification {
 
   def props = new OrderedProperties()
@@ -185,7 +187,7 @@ a=111
 
   def "properties can be ordered using custom comparator"() {
     setup:
-    props = OrderedProperties.withOrdering(String.CASE_INSENSITIVE_ORDER)
+    props = new OrderedPropertiesBuilder().withOrdering(String.CASE_INSENSITIVE_ORDER).build()
     this.props.setProperty("b", "222")
     this.props.setProperty("c", "333")
     this.props.setProperty("a", "111")
@@ -204,7 +206,7 @@ c=333
 
   def "date can be suppressed when writing to stream without comment"() {
     setup:
-    props = OrderedProperties.withoutWritingDateComment()
+    props = new OrderedPropertiesBuilder().suppressDateInComment(true).build()
     props.setProperty("b", "222")
     props.setProperty("c", "333")
     props.setProperty("a", "111")
@@ -223,7 +225,7 @@ a=111
 
   def "date can be suppressed for empty set of properties when writing to stream without comment"() {
     setup:
-    props = OrderedProperties.withoutWritingDateComment()
+    props = new OrderedPropertiesBuilder().suppressDateInComment(true).build()
     def stream = new ByteArrayOutputStream()
 
     when:
@@ -235,7 +237,7 @@ a=111
 
   def "date can be suppressed when writing to stream with comment"() {
     setup:
-    props = OrderedProperties.withoutWritingDateComment()
+    props = new OrderedPropertiesBuilder().suppressDateInComment(true).build()
     props.setProperty("b", "222")
     props.setProperty("c", "333")
     props.setProperty("a", "111")
@@ -255,7 +257,7 @@ a=111
 
   def "date can be suppressed for empty set of properties when writing to stream with comment"() {
     setup:
-    props = OrderedProperties.withoutWritingDateComment()
+    props = new OrderedPropertiesBuilder().suppressDateInComment(true).build()
     def stream = new ByteArrayOutputStream()
 
     when:
@@ -269,7 +271,7 @@ a=111
 
   def "date can be suppressed when writing to stream with long comment"() {
     setup:
-    props = OrderedProperties.withoutWritingDateComment()
+    props = new OrderedPropertiesBuilder().suppressDateInComment(true).build()
     props.setProperty("b", "222")
     props.setProperty("c", "333")
     props.setProperty("a", "111")
@@ -289,7 +291,7 @@ a=111
 
   def "date can be suppressed when writing to stream with multi-line comment"() {
     setup:
-    props = OrderedProperties.withoutWritingDateComment()
+    props = new OrderedPropertiesBuilder().suppressDateInComment(true).build()
     props.setProperty("b", "222")
     props.setProperty("c", "333")
     props.setProperty("a", "111")
