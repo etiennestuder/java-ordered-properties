@@ -368,6 +368,36 @@ a=111
     result.getProperty("d") == null
   }
 
+  def "instances are equal when same properties in same order"() {
+    setup:
+    props = new OrderedPropertiesBuilder().withOrdering(String.CASE_INSENSITIVE_ORDER).build()
+    props.setProperty("c", "333")
+    props.setProperty("b", "222")
+    props.setProperty("a", "111")
+
+    def otherProps = new OrderedPropertiesBuilder().withOrdering(String.CASE_INSENSITIVE_ORDER).build()
+    otherProps.setProperty("a", "111")
+    otherProps.setProperty("b", "222")
+    otherProps.setProperty("c", "333")
+
+    assert props == otherProps
+  }
+
+  def "instances are not equal when same properties in different order"() {
+    setup:
+    props = new OrderedPropertiesBuilder().withOrdering(String.CASE_INSENSITIVE_ORDER).build()
+    props.setProperty("a", "111")
+    props.setProperty("b", "222")
+    props.setProperty("c", "333")
+
+    def otherProps = new OrderedPropertiesBuilder().withOrdering(Collections.reverseOrder()).build()
+    otherProps.setProperty("a", "111")
+    otherProps.setProperty("b", "222")
+    otherProps.setProperty("c", "333")
+
+    assert props != otherProps
+  }
+
   private static Reader asReader(String text) {
     new StringReader(text)
   }

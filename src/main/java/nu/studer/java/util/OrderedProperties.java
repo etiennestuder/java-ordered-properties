@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.InvalidPropertiesFormatException;
@@ -106,7 +107,7 @@ public final class OrderedProperties implements Serializable {
     /**
      * See {@link Properties#propertyNames()}.
      */
-    public Enumeration<?> propertyNames() {
+    public Enumeration<String> propertyNames() {
         synchronized (LOCK) {
             return new Vector<String>(properties.keySet()).elements();
         }
@@ -213,6 +214,25 @@ public final class OrderedProperties implements Serializable {
             }
         }
         return jdkProperties;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+
+        OrderedProperties that = (OrderedProperties) other;
+        return Arrays.equals(properties.entrySet().toArray(), that.properties.entrySet().toArray());
+    }
+
+    @Override
+    public int hashCode() {
+        return properties.hashCode();
     }
 
     private void writeObject(ObjectOutputStream stream) throws IOException {
