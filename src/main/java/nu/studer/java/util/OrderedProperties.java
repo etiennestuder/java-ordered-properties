@@ -41,6 +41,9 @@ import java.util.Vector;
  * properties concurrently, and at least one of the threads modifies the ordered properties structurally, it
  * <em>must</em> be synchronized externally. This is typically accomplished by synchronizing on some object
  * that naturally encapsulates the properties.
+ * <p/>
+ * Note that the actual (and quite complex) logic of parsing and storing properties from and to a stream
+ * is delegated to the {@link Properties} class from the JDK.
  *
  * @see Properties
  */
