@@ -25,7 +25,7 @@ import java.util.Vector;
  * in which the individual properties have been added, either through explicit API calls or through reading
  * them top-to-bottom from a properties file. Also, writing the comment that contains the current date when
  * storing the properties can be suppressed.
- *
+ * <p/>
  * This class is thread-safe.
  *
  * @see Properties
@@ -193,6 +193,21 @@ public final class OrderedProperties {
         synchronized (LOCK) {
             return properties.toString();
         }
+    }
+
+    /**
+     * Convert this instance to a {@link Properties} instance.
+     *
+     * @return the {@link Properties} instance
+     */
+    public Properties toJdkProperties() {
+        Properties jdkProperties = new Properties();
+        synchronized (LOCK) {
+            for (Map.Entry<String, String> entry : this.properties.entrySet()) {
+                jdkProperties.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return jdkProperties;
     }
 
     /**

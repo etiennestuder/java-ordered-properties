@@ -310,6 +310,22 @@ a=111
 """
   }
 
+  def "convert to java.util.Properties"() {
+    setup:
+    props.setProperty("b", "222")
+    props.setProperty("c", "333")
+    props.setProperty("a", "111")
+
+    when:
+    Properties jdkProperties = props.toJdkProperties()
+
+    then:
+    jdkProperties.size() == 3
+    props.getProperty("b") == "222"
+    props.getProperty("c") == "333"
+    props.getProperty("a") == "111"
+  }
+
   private static Reader asReader(String text) {
     new StringReader(text)
   }
