@@ -396,6 +396,7 @@ a=111
     otherProps.setProperty("c", "333")
 
     assert props == otherProps
+    assert props.hashCode() == otherProps.hashCode()
   }
 
   def "instances are not equal when same properties in different order"() {
@@ -411,6 +412,7 @@ a=111
     otherProps.setProperty("c", "333")
 
     assert props != otherProps
+    assert props.hashCode() != otherProps.hashCode()
   }
 
   private static Reader asReader(String text) {

@@ -221,7 +221,7 @@ public final class OrderedProperties implements Serializable {
 
     @Override
     public int hashCode() {
-        return properties.hashCode();
+        return Arrays.hashCode(properties.entrySet().toArray());
     }
 
     private void writeObject(ObjectOutputStream stream) throws IOException {
