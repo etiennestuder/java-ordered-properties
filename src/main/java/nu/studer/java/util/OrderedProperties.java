@@ -217,10 +217,8 @@ public final class OrderedProperties implements Serializable {
      */
     public Properties toJdkProperties() {
         Properties jdkProperties = new Properties();
-        synchronized (LOCK) {
-            for (Map.Entry<String, String> entry : this.properties.entrySet()) {
-                jdkProperties.put(entry.getKey(), entry.getValue());
-            }
+        for (Map.Entry<String, String> entry : this.entrySet()) {
+            jdkProperties.put(entry.getKey(), entry.getValue());
         }
         return jdkProperties;
     }
@@ -235,10 +233,8 @@ public final class OrderedProperties implements Serializable {
             return false;
         }
 
-        synchronized (LOCK) {
-            OrderedProperties that = (OrderedProperties) other;
-            return Arrays.equals(properties.entrySet().toArray(), that.properties.entrySet().toArray());
-        }
+        OrderedProperties that = (OrderedProperties) other;
+        return Arrays.equals(entrySet().toArray(), that.entrySet().toArray());
     }
 
     @Override
