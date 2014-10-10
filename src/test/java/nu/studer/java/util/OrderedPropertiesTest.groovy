@@ -263,7 +263,7 @@ c=333
 
   def "date can be suppressed when writing to stream without comment"() {
     setup:
-    props = new OrderedPropertiesBuilder().suppressDateInComment(true).build()
+    props = new OrderedPropertiesBuilder().withSuppressDateInComment(true).build()
     props.setProperty("b", "222")
     props.setProperty("c", "333")
     props.setProperty("a", "111")
@@ -282,7 +282,7 @@ a=111
 
   def "date can be suppressed for empty set of properties when writing to stream without comment"() {
     setup:
-    props = new OrderedPropertiesBuilder().suppressDateInComment(true).build()
+    props = new OrderedPropertiesBuilder().withSuppressDateInComment(true).build()
     def stream = new ByteArrayOutputStream()
 
     when:
@@ -294,7 +294,7 @@ a=111
 
   def "date can be suppressed when writing to stream with comment"() {
     setup:
-    props = new OrderedPropertiesBuilder().suppressDateInComment(true).build()
+    props = new OrderedPropertiesBuilder().withSuppressDateInComment(true).build()
     props.setProperty("b", "222")
     props.setProperty("c", "333")
     props.setProperty("a", "111")
@@ -314,7 +314,7 @@ a=111
 
   def "date can be suppressed for empty set of properties when writing to stream with comment"() {
     setup:
-    props = new OrderedPropertiesBuilder().suppressDateInComment(true).build()
+    props = new OrderedPropertiesBuilder().withSuppressDateInComment(true).build()
     def stream = new ByteArrayOutputStream()
 
     when:
@@ -328,7 +328,7 @@ a=111
 
   def "date can be suppressed when writing to stream with long comment"() {
     setup:
-    props = new OrderedPropertiesBuilder().suppressDateInComment(true).build()
+    props = new OrderedPropertiesBuilder().withSuppressDateInComment(true).build()
     props.setProperty("b", "222")
     props.setProperty("c", "333")
     props.setProperty("a", "111")
@@ -348,7 +348,7 @@ a=111
 
   def "date can be suppressed when writing to stream with multi-line comment"() {
     setup:
-    props = new OrderedPropertiesBuilder().suppressDateInComment(true).build()
+    props = new OrderedPropertiesBuilder().withSuppressDateInComment(true).build()
     props.setProperty("b", "222")
     props.setProperty("c", "333")
     props.setProperty("a", "111")
