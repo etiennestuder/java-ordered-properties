@@ -215,16 +215,6 @@ public final class OrderedProperties implements Serializable {
         return jdkProperties;
     }
 
-    /**
-     * See {@link Properties#toString()}.
-     */
-    @Override
-    public String toString() {
-        synchronized (LOCK) {
-            return properties.toString();
-        }
-    }
-
     private void writeObject(ObjectOutputStream stream) throws IOException {
         stream.defaultWriteObject();
         stream.writeObject(properties);
@@ -240,6 +230,16 @@ public final class OrderedProperties implements Serializable {
 
     private void readObjectNoData() throws InvalidObjectException {
         throw new InvalidObjectException("Stream data required");
+    }
+
+    /**
+     * See {@link Properties#toString()}.
+     */
+    @Override
+    public String toString() {
+        synchronized (LOCK) {
+            return properties.toString();
+        }
     }
 
     /**
