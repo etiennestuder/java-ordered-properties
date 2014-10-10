@@ -34,13 +34,19 @@ class OrderedPropertiesTest extends Specification {
     assert props.getProperty("bbb", "222") == "222"
   }
 
-  def "properties remain ordered in toString()"() {
+  def "properties remain ordered when getting the entrySet"() {
     setup:
-    props.setProperty("bbb", "222")
-    props.setProperty("ccc", "333")
-    props.setProperty("aaa", "111")
+    props.setProperty("b", "222")
+    props.setProperty("c", "333")
+    props.setProperty("a", "111")
 
-    assert props.toString() == "{bbb=222, ccc=333, aaa=111}"
+    when:
+    Set<Map.Entry<String, String>> entrySet = props.entrySet()
+
+    then:
+    assert entrySet.size() == 3
+    assert entrySet.collect { def entry -> entry.key } == ["b", "c", "a"]
+    assert entrySet.collect { def entry -> entry.value } == ["222", "333", "111"]
   }
 
   def "properties remain ordered when loading from stream"() {
@@ -186,6 +192,56 @@ a=111
 """
   }
 
+  def "properties remain ordered when serializing"() {
+    setup:
+    props.setProperty("b", "222")
+    props.setProperty("c", "333")
+    props.setProperty("a", "111")
+
+    when:
+    def outStream = new ByteArrayOutputStream()
+    new ObjectOutputStream(outStream).writeObject(props)
+    OrderedProperties result = new ObjectInputStream(new ByteArrayInputStream(outStream.toByteArray())).readObject() as OrderedProperties
+
+    then:
+    result.size() == 3
+    result.propertyNames().toList() == ["b", "c", "a"]
+    result.getProperty("b") == "222"
+    result.getProperty("c") == "333"
+    result.getProperty("a") == "111"
+    result.getProperty("d") == null
+  }
+
+  def "properties remain ordered when serializing with custom comparator"() {
+    setup:
+    props = new OrderedPropertiesBuilder().withOrdering(String.CASE_INSENSITIVE_ORDER).build()
+    props.setProperty("b", "222")
+    props.setProperty("c", "333")
+    props.setProperty("a", "111")
+
+    when:
+    def outStream = new ByteArrayOutputStream()
+    new ObjectOutputStream(outStream).writeObject(props)
+    OrderedProperties result = new ObjectInputStream(new ByteArrayInputStream(outStream.toByteArray())).readObject() as OrderedProperties
+
+    then:
+    result.size() == 3
+    result.propertyNames().toList() == ["a", "b", "c"]
+    result.getProperty("a") == "111"
+    result.getProperty("b") == "222"
+    result.getProperty("c") == "333"
+    result.getProperty("d") == null
+  }
+
+  def "properties remain ordered in toString()"() {
+    setup:
+    props.setProperty("bbb", "222")
+    props.setProperty("ccc", "333")
+    props.setProperty("aaa", "111")
+
+    assert props.toString() == "{bbb=222, ccc=333, aaa=111}"
+  }
+
   def "properties can be ordered using custom comparator"() {
     setup:
     props = new OrderedPropertiesBuilder().withOrdering(String.CASE_INSENSITIVE_ORDER).build()
@@ -311,22 +367,7 @@ a=111
 """
   }
 
-  def "properties remain ordered when getting the entrySet"() {
-    setup:
-    props.setProperty("b", "222")
-    props.setProperty("c", "333")
-    props.setProperty("a", "111")
-
-    when:
-    Set<Map.Entry<String, String>> entrySet = props.entrySet()
-
-    then:
-    assert entrySet.size() == 3
-    assert entrySet.collect { def entry -> entry.key } == ["b", "c", "a"]
-    assert entrySet.collect { def entry -> entry.value } == ["222", "333", "111"]
-  }
-
-  def "can be converted to java.util.Properties"() {
+  def "OrderedProperties can be converted to java.util.Properties"() {
     setup:
     props.setProperty("b", "222")
     props.setProperty("c", "333")
@@ -340,47 +381,6 @@ a=111
     jdkProperties.getProperty("b") == "222"
     jdkProperties.getProperty("c") == "333"
     jdkProperties.getProperty("a") == "111"
-  }
-
-  def "properties remain ordered when serializing"() {
-    setup:
-    props.setProperty("b", "222")
-    props.setProperty("c", "333")
-    props.setProperty("a", "111")
-
-    when:
-    def outStream = new ByteArrayOutputStream()
-    new ObjectOutputStream(outStream).writeObject(props)
-    OrderedProperties result = new ObjectInputStream(new ByteArrayInputStream(outStream.toByteArray())).readObject() as OrderedProperties
-
-    then:
-    result.size() == 3
-    result.propertyNames().toList() == ["b", "c", "a"]
-    result.getProperty("b") == "222"
-    result.getProperty("c") == "333"
-    result.getProperty("a") == "111"
-    result.getProperty("d") == null
-  }
-
-  def "properties remain ordered when serializing with custom comparator"() {
-    setup:
-    props = new OrderedPropertiesBuilder().withOrdering(String.CASE_INSENSITIVE_ORDER).build()
-    props.setProperty("b", "222")
-    props.setProperty("c", "333")
-    props.setProperty("a", "111")
-
-    when:
-    def outStream = new ByteArrayOutputStream()
-    new ObjectOutputStream(outStream).writeObject(props)
-    OrderedProperties result = new ObjectInputStream(new ByteArrayInputStream(outStream.toByteArray())).readObject() as OrderedProperties
-
-    then:
-    result.size() == 3
-    result.propertyNames().toList() == ["a", "b", "c"]
-    result.getProperty("a") == "111"
-    result.getProperty("b") == "222"
-    result.getProperty("c") == "333"
-    result.getProperty("d") == null
   }
 
   def "instances are equal when same properties in same order"() {
