@@ -226,26 +226,34 @@ public final class OrderedProperties implements Serializable {
             return false;
         }
 
-        OrderedProperties that = (OrderedProperties) other;
-        return Arrays.equals(properties.entrySet().toArray(), that.properties.entrySet().toArray());
+        synchronized (LOCK) {
+            OrderedProperties that = (OrderedProperties) other;
+            return Arrays.equals(properties.entrySet().toArray(), that.properties.entrySet().toArray());
+        }
     }
 
     @Override
     public int hashCode() {
-        return properties.hashCode();
+        synchronized (LOCK) {
+            return properties.hashCode();
+        }
     }
 
     private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
-        stream.writeObject(properties);
-        stream.writeBoolean(suppressDate);
+        synchronized (LOCK) {
+            stream.defaultWriteObject();
+            stream.writeObject(properties);
+            stream.writeBoolean(suppressDate);
+        }
     }
 
     @SuppressWarnings("unchecked")
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        properties = (Map<String, String>) stream.readObject();
-        suppressDate = stream.readBoolean();
+        synchronized (LOCK) {
+            stream.defaultReadObject();
+            properties = (Map<String, String>) stream.readObject();
+            suppressDate = stream.readBoolean();
+        }
     }
 
     private void readObjectNoData() throws InvalidObjectException {
