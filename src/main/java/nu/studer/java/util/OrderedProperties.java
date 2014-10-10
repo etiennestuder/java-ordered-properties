@@ -87,14 +87,14 @@ public final class OrderedProperties {
     }
 
     public void load(InputStream stream) throws IOException {
-        CustomProperties customProperties = new CustomProperties();
+        CustomProperties customProperties = new CustomProperties(this.properties);
         synchronized (LOCK) {
             customProperties.load(stream);
         }
     }
 
     public void load(Reader reader) throws IOException {
-        CustomProperties customProperties = new CustomProperties();
+        CustomProperties customProperties = new CustomProperties(this.properties);
         synchronized (LOCK) {
             customProperties.load(reader);
         }
@@ -102,14 +102,14 @@ public final class OrderedProperties {
 
     @SuppressWarnings("DuplicateThrows")
     public void loadFromXML(InputStream stream) throws IOException, InvalidPropertiesFormatException {
-        CustomProperties customProperties = new CustomProperties();
+        CustomProperties customProperties = new CustomProperties(this.properties);
         synchronized (LOCK) {
             customProperties.loadFromXML(stream);
         }
     }
 
     public void store(OutputStream stream, String comments) throws IOException {
-        CustomProperties customProperties = new CustomProperties();
+        CustomProperties customProperties = new CustomProperties(this.properties);
         synchronized (LOCK) {
             if (suppressDate) {
                 customProperties.store(new DateSuppressingPropertiesBufferedWriter(new OutputStreamWriter(stream, "8859_1")), comments);
@@ -120,7 +120,7 @@ public final class OrderedProperties {
     }
 
     public void store(Writer writer, String comments) throws IOException {
-        CustomProperties customProperties = new CustomProperties();
+        CustomProperties customProperties = new CustomProperties(this.properties);
         synchronized (LOCK) {
             if (suppressDate) {
                 customProperties.store(new DateSuppressingPropertiesBufferedWriter(writer), comments);
@@ -131,14 +131,14 @@ public final class OrderedProperties {
     }
 
     public void storeToXML(OutputStream stream, String comment) throws IOException {
-        CustomProperties customProperties = new CustomProperties();
+        CustomProperties customProperties = new CustomProperties(this.properties);
         synchronized (LOCK) {
             customProperties.storeToXML(stream, comment);
         }
     }
 
     public void storeToXML(OutputStream stream, String comment, String encoding) throws IOException {
-        CustomProperties customProperties = new CustomProperties();
+        CustomProperties customProperties = new CustomProperties(this.properties);
         synchronized (LOCK) {
             customProperties.storeToXML(stream, comment, encoding);
         }
@@ -181,6 +181,11 @@ public final class OrderedProperties {
             return this;
         }
 
+        /**
+         * Builds a new {@link OrderedProperties} instance.
+         *
+         * @return the new instance
+         */
         public OrderedProperties build() {
             Map<String, String> properties = (this.comparator != null) ?
                     new TreeMap<String, String>(comparator) :
@@ -190,38 +195,48 @@ public final class OrderedProperties {
 
     }
 
-    private final class CustomProperties extends Properties {
+    /**
+     * Custom {@link Properties} that delegates reading, writing, and enumerating properties to the
+     * backing {@link OrderedProperties} instance.
+     */
+    private static final class CustomProperties extends Properties {
+
+        private final Map<String, String> targetProperties;
+
+        private CustomProperties(Map<String, String> targetProperties) {
+            this.targetProperties = targetProperties;
+        }
 
         @Override
         public Object get(Object key) {
-            return properties.get(key);
+            return targetProperties.get(key);
         }
 
         @Override
         public Object put(Object key, Object value) {
-            return properties.put((String) key, (String) value);
+            return targetProperties.put((String) key, (String) value);
         }
 
         @Override
         public String getProperty(String key) {
-            return properties.get(key);
+            return targetProperties.get(key);
         }
 
         @Override
         public Enumeration<Object> keys() {
-            return new Vector<Object>(properties.keySet()).elements();
+            return new Vector<Object>(targetProperties.keySet()).elements();
         }
 
         @SuppressWarnings("NullableProblems")
         @Override
         public Set<Object> keySet() {
-            return new LinkedHashSet<Object>(properties.keySet());
+            return new LinkedHashSet<Object>(targetProperties.keySet());
         }
 
     }
 
     /**
-     * Custom writer for storing properties that will write all leading lines of comments except
+     * Custom {@link BufferedWriter} for storing properties that will write all leading lines of comments except
      * the last comment line. Using the JDK Properties class to store properties, the last comment
      * line always contains the current date which is what we want to filter out.
      */
