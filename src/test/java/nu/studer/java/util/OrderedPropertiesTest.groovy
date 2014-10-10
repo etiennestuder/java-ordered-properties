@@ -79,7 +79,7 @@ a=111
         props.getProperty("d") == null
     }
 
-    def "properties remain ordered when loading from stream in xml format"() {
+    def "properties remain ordered when loading from stream as xml"() {
         setup:
         def stream = asStream """\
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -114,7 +114,7 @@ a=111
         props.store(stream, null)
 
         then:
-        stream.toString().endsWith """
+        stream.toString() endsWith """
 b=222
 c=333
 a=111
@@ -132,7 +132,7 @@ a=111
         props.store(writer, null)
 
         then:
-        writer.toString().endsWith """
+        writer.toString() endsWith """
 b=222
 c=333
 a=111
@@ -184,6 +184,72 @@ a=111
 </properties>
 """
     }
+
+    def "date can be suppressed when writing to stream without comment"() {
+        setup:
+        props = new OrderedProperties(true)
+        props.setProperty("b", "222")
+        props.setProperty("c", "333")
+        props.setProperty("a", "111")
+        def stream = new ByteArrayOutputStream()
+
+        when:
+        props.store(stream, null)
+
+        then:
+        stream.toString() == """\
+b=222
+c=333
+a=111
+"""
+    }
+
+    def "date can be suppressed for empty set of properties when writing to stream without comment"() {
+        setup:
+        props = new OrderedProperties(true)
+        def stream = new ByteArrayOutputStream()
+
+        when:
+        props.store(stream, null)
+
+        then:
+        stream.toString() == ""
+    }
+
+    def "date can be suppressed when writing to stream with comment"() {
+        setup:
+        props = new OrderedProperties(true)
+        props.setProperty("b", "222")
+        props.setProperty("c", "333")
+        props.setProperty("a", "111")
+        def stream = new ByteArrayOutputStream()
+
+        when:
+        props.store(stream, "some comment")
+
+        then:
+        stream.toString() == """\
+#some comment
+b=222
+c=333
+a=111
+"""
+    }
+
+    def "date can be suppressed for empty set of properties when writing to stream with comment"() {
+        setup:
+        props = new OrderedProperties(true)
+        def stream = new ByteArrayOutputStream()
+
+        when:
+        props.store(stream, "some comment")
+
+        then:
+        stream.toString() == """\
+#some comment
+"""
+    }
+
 
     private static Reader asReader(String text) {
         new StringReader(text)

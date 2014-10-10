@@ -1,14 +1,18 @@
 package nu.studer.java.util;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Deque;
 import java.util.Enumeration;
 import java.util.InvalidPropertiesFormatException;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -29,9 +33,15 @@ public final class OrderedProperties {
     private static final Object LOCK = new Object();
 
     private final Map<String, String> properties;
+    private final boolean suppressDate;
 
     public OrderedProperties() {
-        properties = new LinkedHashMap<String, String>();
+        this(false);
+    }
+
+    public OrderedProperties(boolean suppressDate) {
+        this.properties = new LinkedHashMap<String, String>();
+        this.suppressDate = suppressDate;
     }
 
     public String getProperty(String key) {
@@ -96,14 +106,22 @@ public final class OrderedProperties {
     public void store(OutputStream stream, String comments) throws IOException {
         CustomProperties customProperties = new CustomProperties();
         synchronized (LOCK) {
-            customProperties.store(stream, comments);
+            if (suppressDate) {
+                customProperties.store(new DateSuppressingPropertiesBufferedWriter(new OutputStreamWriter(stream, "8859_1")), comments);
+            } else {
+                customProperties.store(stream, comments);
+            }
         }
     }
 
     public void store(Writer writer, String comments) throws IOException {
         CustomProperties customProperties = new CustomProperties();
         synchronized (LOCK) {
-            customProperties.store(writer, comments);
+            if (suppressDate) {
+                customProperties.store(new DateSuppressingPropertiesBufferedWriter(writer), comments);
+            } else {
+                customProperties.store(writer, comments);
+            }
         }
     }
 
@@ -154,6 +172,45 @@ public final class OrderedProperties {
         @Override
         public Set<Object> keySet() {
             return new LinkedHashSet<Object>(properties.keySet());
+        }
+
+    }
+
+    private static final class DateSuppressingPropertiesBufferedWriter extends BufferedWriter {
+
+        private final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+        private boolean inComment;
+        private StringBuilder currentComment;
+        private final Deque<String> comments;
+
+        private DateSuppressingPropertiesBufferedWriter(Writer out) {
+            super(out);
+
+            inComment = false;
+            currentComment = new StringBuilder();
+            comments = new LinkedList<String>();
+        }
+
+        @SuppressWarnings("NullableProblems")
+        @Override
+        public void write(String string) throws IOException {
+            if (inComment) {
+                currentComment.append(string);
+                if (string.endsWith(LINE_SEPARATOR)) {
+                    comments.addLast(currentComment.toString());
+                    if (comments.size() > 1) {
+                        super.write(comments.removeFirst());
+                    }
+                    inComment = false;
+                }
+            } else if (string.startsWith("#")) {
+                currentComment.delete(0, currentComment.length());
+                currentComment.append(string);
+                inComment = true;
+            } else {
+                super.write(string);
+            }
         }
 
     }
