@@ -49,12 +49,18 @@ public final class OrderedProperties {
         this.suppressDate = suppressDate;
     }
 
+    /**
+     * See {@link Properties#getProperty(String)}.
+     */
     public String getProperty(String key) {
         synchronized (LOCK) {
             return properties.get(key);
         }
     }
 
+    /**
+     * See {@link Properties#getProperty(String, String)}.
+     */
     public String getProperty(String key, String defaultValue) {
         synchronized (LOCK) {
             String value = properties.get(key);
@@ -62,30 +68,45 @@ public final class OrderedProperties {
         }
     }
 
+    /**
+     * See {@link Properties#setProperty(String, String)}.
+     */
     public String setProperty(String key, String value) {
         synchronized (LOCK) {
             return properties.put(key, value);
         }
     }
 
+    /**
+     * See {@link Properties#isEmpty()}.
+     */
     public boolean isEmpty() {
         synchronized (LOCK) {
             return properties.isEmpty();
         }
     }
 
+    /**
+     * See {@link Properties#propertyNames()}.
+     */
     public Enumeration<?> propertyNames() {
         synchronized (LOCK) {
             return new Vector<String>(properties.keySet()).elements();
         }
     }
 
+    /**
+     * See {@link Properties#stringPropertyNames()}.
+     */
     public Set<String> stringPropertyNames() {
         synchronized (LOCK) {
             return new LinkedHashSet<String>(properties.keySet());
         }
     }
 
+    /**
+     * See {@link Properties#load(InputStream)}.
+     */
     public void load(InputStream stream) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
         synchronized (LOCK) {
@@ -93,6 +114,9 @@ public final class OrderedProperties {
         }
     }
 
+    /**
+     * See {@link Properties#load(Reader)}.
+     */
     public void load(Reader reader) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
         synchronized (LOCK) {
@@ -100,6 +124,9 @@ public final class OrderedProperties {
         }
     }
 
+    /**
+     * See {@link Properties#loadFromXML(InputStream)}.
+     */
     @SuppressWarnings("DuplicateThrows")
     public void loadFromXML(InputStream stream) throws IOException, InvalidPropertiesFormatException {
         CustomProperties customProperties = new CustomProperties(this.properties);
@@ -108,6 +135,9 @@ public final class OrderedProperties {
         }
     }
 
+    /**
+     * See {@link Properties#store(OutputStream, String)}.
+     */
     public void store(OutputStream stream, String comments) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
         synchronized (LOCK) {
@@ -119,6 +149,9 @@ public final class OrderedProperties {
         }
     }
 
+    /**
+     * See {@link Properties#store(Writer, String)}.
+     */
     public void store(Writer writer, String comments) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
         synchronized (LOCK) {
@@ -130,6 +163,9 @@ public final class OrderedProperties {
         }
     }
 
+    /**
+     * See {@link Properties#storeToXML(OutputStream, String)}.
+     */
     public void storeToXML(OutputStream stream, String comment) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
         synchronized (LOCK) {
@@ -137,6 +173,9 @@ public final class OrderedProperties {
         }
     }
 
+    /**
+     * See {@link Properties#storeToXML(OutputStream, String, String)}.
+     */
     public void storeToXML(OutputStream stream, String comment, String encoding) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
         synchronized (LOCK) {
@@ -144,6 +183,9 @@ public final class OrderedProperties {
         }
     }
 
+    /**
+     * See {@link Properties#toString()}.
+     */
     @Override
     public String toString() {
         synchronized (LOCK) {
@@ -197,7 +239,7 @@ public final class OrderedProperties {
 
     /**
      * Custom {@link Properties} that delegates reading, writing, and enumerating properties to the
-     * backing {@link OrderedProperties} instance.
+     * backing {@link OrderedProperties} instance's properties.
      */
     private static final class CustomProperties extends Properties {
 
