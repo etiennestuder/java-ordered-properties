@@ -37,6 +37,9 @@ through a `java.util.Comparator` instance. Filtering out the current date from b
 is achieved by a decorating `java.io.BufferedWriter`. Reading properties to and from a file is delegated to the 
 `java.util.Properties` class since the involved logic is quite complex and code duplication is not desired.
 
+The class `nu.studer.java.util.OrderedProperties` implements `equals` and `hashCode` based on the properties 
+and the order in which they appear. The class also fulfills the contract of `java.io.Serializable`. 
+
 # Usage
 
 ## Original functionality
