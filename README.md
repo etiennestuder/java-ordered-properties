@@ -66,6 +66,15 @@ builder.withSuppressDateInComment(true);
 OrderedProperties properties = builder.build();
 ```
 
+If needed for compatibility with existing APIs that consume JDK properties, an instance of 
+`nu.studer.java.util.OrderedProperties` can be converted to an instance of `java.util.Properties`.
+  
+```java
+OrderedProperties properties = new OrderedProperties();
+properties.setProperty("someKey", "someValue");
+java.util.Properties jdkProperties = properties.toJdkProperties();
+```
+
 # Feedback and Contributions
 
 Both feedback and contributions are very welcome.
