@@ -24,14 +24,23 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 /**
- * This class provides a drop-in replacement for the java.util.Properties class. It fixes the design flaw
- * of using inheritance over composition, while keeping up the same APIs as the original class. As additional
- * functionality, this class keeps its properties in a well-defined order. By default, the order is the one
- * in which the individual properties have been added, either through explicit API calls or through reading
- * them top-to-bottom from a properties file. Also, writing the comment that contains the current date when
- * storing the properties can be suppressed.
+ * This class provides a replacement for the JDK's {@link Properties} class. It fixes the design flaw of using
+ * inheritance over composition, while keeping up the same APIs as the original class. Keys and values are
+ * guaranteed to be of type {@link String}.
  * <p/>
- * This class is thread-safe.
+ * This class is not synchronized, contrary to the original implementation.
+ * <p/>
+ * As additional functionality, this class keeps its properties in a well-defined order. By default, the order
+ * is the one in which the individual properties have been added, either through explicit API calls or through
+ * reading them top-to-bottom from a properties file.
+ * <p/>
+ * Also, an optional flag can be set to omit the comment that contains the current date when storing the
+ * properties to a properties file.
+ * <p/>
+ * <strong>Note that this implementation is not synchronized.</strong> If multiple threads access ordered
+ * properties concurrently, and at least one of the threads modifies the ordered properties structurally, it
+ * <em>must</em> be synchronized externally. This is typically accomplished by synchronizing on some object
+ * that naturally encapsulates the properties.
  *
  * @see Properties
  */
@@ -39,8 +48,6 @@ import java.util.Vector;
 public final class OrderedProperties implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    private static final Object LOCK = new Object();
 
     private transient Map<String, String> properties;
     private transient boolean suppressDate;
@@ -62,73 +69,57 @@ public final class OrderedProperties implements Serializable {
      * See {@link Properties#getProperty(String)}.
      */
     public String getProperty(String key) {
-        synchronized (LOCK) {
-            return properties.get(key);
-        }
+        return properties.get(key);
     }
 
     /**
      * See {@link Properties#getProperty(String, String)}.
      */
     public String getProperty(String key, String defaultValue) {
-        synchronized (LOCK) {
-            String value = properties.get(key);
-            return (value == null) ? defaultValue : value;
-        }
+        String value = properties.get(key);
+        return (value == null) ? defaultValue : value;
     }
 
     /**
      * See {@link Properties#setProperty(String, String)}.
      */
     public String setProperty(String key, String value) {
-        synchronized (LOCK) {
-            return properties.put(key, value);
-        }
+        return properties.put(key, value);
     }
 
     /**
      * See {@link Properties#size()}.
      */
     public int size() {
-        synchronized (LOCK) {
-            return properties.size();
-        }
+        return properties.size();
     }
 
     /**
      * See {@link Properties#isEmpty()}.
      */
     public boolean isEmpty() {
-        synchronized (LOCK) {
-            return properties.isEmpty();
-        }
+        return properties.isEmpty();
     }
 
     /**
      * See {@link Properties#propertyNames()}.
      */
     public Enumeration<String> propertyNames() {
-        synchronized (LOCK) {
-            return new Vector<String>(properties.keySet()).elements();
-        }
+        return new Vector<String>(properties.keySet()).elements();
     }
 
     /**
      * See {@link Properties#stringPropertyNames()}.
      */
     public Set<String> stringPropertyNames() {
-        synchronized (LOCK) {
-            return new LinkedHashSet<String>(properties.keySet());
-        }
+        return new LinkedHashSet<String>(properties.keySet());
     }
 
     /**
-     * See {@link java.util.Properties#entrySet()}.
+     * See {@link Properties#entrySet()}.
      */
     public Set<Map.Entry<String, String>> entrySet() {
-        synchronized (LOCK) {
-            return new LinkedHashSet<Map.Entry<String, String>>(properties.entrySet());
-        }
+        return new LinkedHashSet<Map.Entry<String, String>>(properties.entrySet());
     }
 
     /**
@@ -136,9 +127,7 @@ public final class OrderedProperties implements Serializable {
      */
     public void load(InputStream stream) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
-        synchronized (LOCK) {
-            customProperties.load(stream);
-        }
+        customProperties.load(stream);
     }
 
     /**
@@ -146,9 +135,7 @@ public final class OrderedProperties implements Serializable {
      */
     public void load(Reader reader) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
-        synchronized (LOCK) {
-            customProperties.load(reader);
-        }
+        customProperties.load(reader);
     }
 
     /**
@@ -157,9 +144,7 @@ public final class OrderedProperties implements Serializable {
     @SuppressWarnings("DuplicateThrows")
     public void loadFromXML(InputStream stream) throws IOException, InvalidPropertiesFormatException {
         CustomProperties customProperties = new CustomProperties(this.properties);
-        synchronized (LOCK) {
-            customProperties.loadFromXML(stream);
-        }
+        customProperties.loadFromXML(stream);
     }
 
     /**
@@ -167,12 +152,10 @@ public final class OrderedProperties implements Serializable {
      */
     public void store(OutputStream stream, String comments) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
-        synchronized (LOCK) {
-            if (suppressDate) {
-                customProperties.store(new DateSuppressingPropertiesBufferedWriter(new OutputStreamWriter(stream, "8859_1")), comments);
-            } else {
-                customProperties.store(stream, comments);
-            }
+        if (suppressDate) {
+            customProperties.store(new DateSuppressingPropertiesBufferedWriter(new OutputStreamWriter(stream, "8859_1")), comments);
+        } else {
+            customProperties.store(stream, comments);
         }
     }
 
@@ -181,12 +164,10 @@ public final class OrderedProperties implements Serializable {
      */
     public void store(Writer writer, String comments) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
-        synchronized (LOCK) {
-            if (suppressDate) {
-                customProperties.store(new DateSuppressingPropertiesBufferedWriter(writer), comments);
-            } else {
-                customProperties.store(writer, comments);
-            }
+        if (suppressDate) {
+            customProperties.store(new DateSuppressingPropertiesBufferedWriter(writer), comments);
+        } else {
+            customProperties.store(writer, comments);
         }
     }
 
@@ -195,9 +176,7 @@ public final class OrderedProperties implements Serializable {
      */
     public void storeToXML(OutputStream stream, String comment) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
-        synchronized (LOCK) {
-            customProperties.storeToXML(stream, comment);
-        }
+        customProperties.storeToXML(stream, comment);
     }
 
     /**
@@ -205,9 +184,7 @@ public final class OrderedProperties implements Serializable {
      */
     public void storeToXML(OutputStream stream, String comment, String encoding) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
-        synchronized (LOCK) {
-            customProperties.storeToXML(stream, comment, encoding);
-        }
+        customProperties.storeToXML(stream, comment, encoding);
     }
 
     /**
@@ -234,31 +211,25 @@ public final class OrderedProperties implements Serializable {
         }
 
         OrderedProperties that = (OrderedProperties) other;
-        return Arrays.equals(entrySet().toArray(), that.entrySet().toArray());
+        return Arrays.equals(properties.entrySet().toArray(), that.properties.entrySet().toArray());
     }
 
     @Override
     public int hashCode() {
-        synchronized (LOCK) {
-            return properties.hashCode();
-        }
+        return properties.hashCode();
     }
 
     private void writeObject(ObjectOutputStream stream) throws IOException {
-        synchronized (LOCK) {
-            stream.defaultWriteObject();
-            stream.writeObject(properties);
-            stream.writeBoolean(suppressDate);
-        }
+        stream.defaultWriteObject();
+        stream.writeObject(properties);
+        stream.writeBoolean(suppressDate);
     }
 
     @SuppressWarnings("unchecked")
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        synchronized (LOCK) {
-            stream.defaultReadObject();
-            properties = (Map<String, String>) stream.readObject();
-            suppressDate = stream.readBoolean();
-        }
+        stream.defaultReadObject();
+        properties = (Map<String, String>) stream.readObject();
+        suppressDate = stream.readBoolean();
     }
 
     private void readObjectNoData() throws InvalidObjectException {
@@ -270,9 +241,7 @@ public final class OrderedProperties implements Serializable {
      */
     @Override
     public String toString() {
-        synchronized (LOCK) {
-            return properties.toString();
-        }
+        return properties.toString();
     }
 
     /**
