@@ -183,6 +183,25 @@ a=111
 """
   }
 
+  def "properties can be ordered using custom comparator"() {
+    setup:
+    props = OrderedProperties.withOrdering(String.CASE_INSENSITIVE_ORDER)
+    this.props.setProperty("b", "222")
+    this.props.setProperty("c", "333")
+    this.props.setProperty("a", "111")
+    def stream = new ByteArrayOutputStream()
+
+    when:
+    this.props.store(stream, null)
+
+    then:
+    stream.toString() endsWith """
+a=111
+b=222
+c=333
+"""
+  }
+
   def "date can be suppressed when writing to stream without comment"() {
     setup:
     props = OrderedProperties.withoutWritingDateComment()

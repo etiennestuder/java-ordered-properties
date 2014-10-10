@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.InvalidPropertiesFormatException;
 import java.util.LinkedHashMap;
@@ -14,6 +15,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.Vector;
 
 /**
@@ -35,11 +37,11 @@ public final class OrderedProperties {
      * Creates a new instance that will keep the properties in the order they have been added.
      */
     public OrderedProperties() {
-        this(false);
+        this(new LinkedHashMap<String, String>(), false);
     }
 
-    private OrderedProperties(boolean suppressDate) {
-        this.properties = new LinkedHashMap<String, String>();
+    private OrderedProperties(Map<String, String> properties, boolean suppressDate) {
+        this.properties = properties;
         this.suppressDate = suppressDate;
     }
 
@@ -151,7 +153,16 @@ public final class OrderedProperties {
      * @return a new instance
      */
     public static OrderedProperties withoutWritingDateComment() {
-        return new OrderedProperties(true);
+        return new OrderedProperties(new LinkedHashMap<String, String>(), true);
+    }
+
+    /**
+     * Creates a new instance that will omit the date comment when writing the properties to a stream.
+     *
+     * @return a new instance
+     */
+    public static OrderedProperties withOrdering(Comparator<? super String> comparator) {
+        return new OrderedProperties(new TreeMap<String, String>(comparator), false);
     }
 
     private final class CustomProperties extends Properties {
