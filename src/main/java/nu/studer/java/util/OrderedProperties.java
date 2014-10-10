@@ -26,6 +26,8 @@ import java.util.Vector;
  * them top-to-bottom from a properties file. Also, writing the comment that contains the current date when
  * storing the properties can be suppressed.
  *
+ * This class is thread-safe.
+ *
  * @see Properties
  */
 @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
