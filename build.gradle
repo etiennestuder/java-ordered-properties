@@ -1,4 +1,15 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayPluginVersion"
+  }
+}
+
 apply plugin: 'groovy'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 repositories {
   jcenter()
@@ -8,3 +19,55 @@ dependencies {
   testCompile "org.codehaus.groovy:groovy-all:1.8.9"
   testCompile "org.spockframework:spock-core:0.7-groovy-1.8"
 }
+
+group = 'nu.studer'
+version = '0.0.9'
+
+task sourceJar(type: Jar) {
+  from sourceSets.main.allSource
+}
+
+task docsJar(type: Jar) {
+  from javadoc
+}
+
+publishing {
+  publications {
+    java(MavenPublication) {
+      from components.java
+      artifact sourceJar {
+        classifier "sources"
+      }
+      artifact docsJar {
+        classifier "javadoc"
+      }
+    }
+  }
+}
+
+bintray {
+  user = "$BINTRAY_USER"
+  key = "$BINTRAY_API_KEY"
+
+  publications = ['java']
+
+  dryRun = false
+  publish = true
+
+  pkg {
+    repo = 'java-utilities'
+    name = 'java-ordered-properties-class'
+    desc = 'Replacement for the JDK class java.util.Properties.'
+    websiteUrl = 'https://github.com/etiennestuder/java-ordered-properties-class'
+    issueTrackerUrl = 'https://github.com/etiennestuder/java-ordered-properties-class/issues'
+    vcsUrl = 'https://github.com/etiennestuder/java-ordered-properties-class.git'
+    licenses = ['Apache-2.0']
+    labels = ['java', 'utilities']
+    publicDownloadNumbers = false
+
+    version {
+      vcsTag = publishing.publications.java.version
+    }
+  }
+}
+
