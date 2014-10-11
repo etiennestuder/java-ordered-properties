@@ -56,15 +56,15 @@ bintray {
   publications = ['java']
 
   dryRun = true
-  publish = true
+  publish = false
 
   pkg {
     repo = 'java-utilities'
-    name = 'java-ordered-properties-class'
+    name = 'java-ordered-properties'
     desc = 'Replacement for the JDK class java.util.Properties.'
-    websiteUrl = 'https://github.com/etiennestuder/java-ordered-properties-class'
-    issueTrackerUrl = 'https://github.com/etiennestuder/java-ordered-properties-class/issues'
-    vcsUrl = 'https://github.com/etiennestuder/java-ordered-properties-class.git'
+    websiteUrl = 'https://github.com/etiennestuder/java-ordered-properties'
+    issueTrackerUrl = 'https://github.com/etiennestuder/java-ordered-properties/issues'
+    vcsUrl = 'https://github.com/etiennestuder/java-ordered-properties.git'
     licenses = ['Apache-2.0']
     labels = ['java', 'utilities']
     publicDownloadNumbers = false

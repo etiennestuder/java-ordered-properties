@@ -1,5 +1,5 @@
-java-ordered-properties-class
-=============================
+java-ordered-properties
+=======================
 
 # Overview
 
