@@ -16,8 +16,8 @@ repositories {
 }
 
 dependencies {
-  testCompile "org.codehaus.groovy:groovy-all:1.8.9"
-  testCompile "org.spockframework:spock-core:0.7-groovy-1.8"
+  testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
+  testCompile "org.spockframework:spock-core:$spockVersion"
 }
 
 group = 'nu.studer'
