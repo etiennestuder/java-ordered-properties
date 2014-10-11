@@ -34,6 +34,22 @@ class OrderedPropertiesTest extends Specification {
     assert props.getProperty("bbb", "222") == "222"
   }
 
+  def "OrderedProperties has same behavior as java.util.Properties"() {
+    setup:
+    def jdkProps = new Properties()
+
+    [props, jdkProps].each {
+      it.setProperty("aaa", "111")
+    }
+
+    [props, jdkProps].each {
+      assert it.getProperty("aaa") == "111"
+      assert it.getProperty("aaa", "222") == "111"
+      assert it.getProperty("bbb") == null
+      assert it.getProperty("bbb", "222") == "222"
+    }
+  }
+
   def "properties remain ordered when getting the entrySet"() {
     setup:
     props.setProperty("b", "222")
