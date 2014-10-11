@@ -71,17 +71,19 @@ class OrderedPropertiesTest extends Specification {
 b=222
 c=333
 a=111
+d=
 """
     when:
     props.load(stream)
 
     then:
-    props.propertyNames().toList() == ["b", "c", "a"]
-    props.stringPropertyNames() == ["b", "c", "a"] as Set
+    props.propertyNames().toList() == ["b", "c", "a", "d"]
+    props.stringPropertyNames() == ["b", "c", "a", "d"] as Set
     props.getProperty("b") == "222"
     props.getProperty("c") == "333"
     props.getProperty("a") == "111"
-    props.getProperty("d") == null
+    props.getProperty("d") == ""
+    props.getProperty("e") == null
   }
 
   def "properties remain ordered when loading from reader"() {
@@ -90,17 +92,19 @@ a=111
 b=222
 c=333
 a=111
+d=
 """
     when:
     props.load(reader)
 
     then:
-    props.propertyNames().toList() == ["b", "c", "a"]
-    props.stringPropertyNames() == ["b", "c", "a"] as Set
+    props.propertyNames().toList() == ["b", "c", "a", "d"]
+    props.stringPropertyNames() == ["b", "c", "a", "d"] as Set
     props.getProperty("b") == "222"
     props.getProperty("c") == "333"
     props.getProperty("a") == "111"
-    props.getProperty("d") == null
+    props.getProperty("d") == ""
+    props.getProperty("e") == null
   }
 
   def "properties remain ordered when loading from stream as xml"() {
@@ -112,18 +116,20 @@ a=111
   <entry key="b">222</entry>
   <entry key="c">333</entry>
   <entry key="a">111</entry>
+  <entry key="d"></entry>
 </properties>
 """
     when:
     props.loadFromXML(stream)
 
     then:
-    props.propertyNames().toList() == ["b", "c", "a"]
-    props.stringPropertyNames() == ["b", "c", "a"] as Set
+    props.propertyNames().toList() == ["b", "c", "a", "d"]
+    props.stringPropertyNames() == ["b", "c", "a", "d"] as Set
     props.getProperty("b") == "222"
     props.getProperty("c") == "333"
     props.getProperty("a") == "111"
-    props.getProperty("d") == null
+    props.getProperty("d") == ""
+    props.getProperty("e") == null
   }
 
   def "properties remain ordered when writing to stream"() {
@@ -131,6 +137,7 @@ a=111
     props.setProperty("b", "222")
     props.setProperty("c", "333")
     props.setProperty("a", "111")
+    props.setProperty("d", "")
     def stream = new ByteArrayOutputStream()
 
     when:
@@ -141,6 +148,7 @@ a=111
 b=222
 c=333
 a=111
+d=
 """
   }
 
@@ -149,6 +157,7 @@ a=111
     props.setProperty("b", "222")
     props.setProperty("c", "333")
     props.setProperty("a", "111")
+    props.setProperty("d", "")
     def writer = new StringWriter()
 
     when:
@@ -159,6 +168,7 @@ a=111
 b=222
 c=333
 a=111
+d=
 """
   }
 
@@ -167,6 +177,7 @@ a=111
     props.setProperty("b", "222")
     props.setProperty("c", "333")
     props.setProperty("a", "111")
+    props.setProperty("d", "")
     def stream = new ByteArrayOutputStream()
 
     when:
@@ -181,6 +192,7 @@ a=111
 <entry key="b">222</entry>
 <entry key="c">333</entry>
 <entry key="a">111</entry>
+<entry key="d"/>
 </properties>
 """
   }
@@ -190,6 +202,7 @@ a=111
     props.setProperty("b", "222")
     props.setProperty("c", "333")
     props.setProperty("a", "111")
+    props.setProperty("d", "")
     def stream = new ByteArrayOutputStream()
 
     when:
@@ -204,6 +217,7 @@ a=111
 <entry key="b">222</entry>
 <entry key="c">333</entry>
 <entry key="a">111</entry>
+<entry key="d"/>
 </properties>
 """
   }
