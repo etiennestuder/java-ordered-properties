@@ -21,7 +21,7 @@ dependencies {
 }
 
 group = 'nu.studer'
-version = '1.0.0'
+version = '1.0.1'
 
 task sourcesJar(type: Jar) {
   description = 'Assembles a jar archive containing the main source code.'
@@ -56,7 +56,7 @@ bintray {
   publications = ['java']
 
   dryRun = true
-  publish = false
+  publish = true
 
   pkg {
     repo = 'java-utilities'
