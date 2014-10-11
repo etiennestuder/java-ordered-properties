@@ -54,6 +54,12 @@ properties.load(new FileInputStream(new File("~/some.properties")));
 String value = properties.getProperty("someKey", "someDefaultValue");
 ```
 
+You can also test for the presence of a given property.
+
+```java
+boolean isPresent = properties.containsProperty("someKey");
+```
+
 ## New functionality
 
 Use the new functionality by instantiating the builder class `nu.studer.java.util.OrderedProperties.OrderedPropertiesBuilder`. You 
