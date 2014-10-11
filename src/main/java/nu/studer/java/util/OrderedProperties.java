@@ -93,6 +93,15 @@ public final class OrderedProperties implements Serializable {
     }
 
     /**
+     * Returns <tt>true</tt> if there is a property with the specified key.
+     *
+     * @param key the key whose presence is to be tested
+     */
+    public boolean containsProperty(String key) {
+        return properties.containsKey(key);
+    }
+
+    /**
      * See {@link Properties#size()}.
      */
     public int size() {

@@ -12,6 +12,9 @@ class OrderedPropertiesTest extends Specification {
     setup:
     assert props.isEmpty()
     assert props.size() == 0
+    assert props.entrySet().size() == 0
+    assert props.stringPropertyNames().size() == 0
+    assert !props.propertyNames().hasMoreElements()
   }
 
   def "get property without default value specified"() {
@@ -32,6 +35,13 @@ class OrderedPropertiesTest extends Specification {
 
     props.setProperty("bbb", null)
     assert props.getProperty("bbb", "222") == "222"
+  }
+
+  def "has property"() {
+    setup:
+    props.setProperty("aaa", "111")
+    assert props.containsProperty("aaa")
+    assert !props.containsProperty("bbb")
   }
 
   def "OrderedProperties has same behavior as java.util.Properties"() {
