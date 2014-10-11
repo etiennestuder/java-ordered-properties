@@ -21,7 +21,7 @@ dependencies {
 }
 
 group = 'nu.studer'
-version = '0.0.9'
+version = '1.0.0'
 
 task sourceJar(type: Jar) {
   from sourceSets.main.allSource
@@ -51,7 +51,7 @@ bintray {
 
   publications = ['java']
 
-  dryRun = false
+  dryRun = true
   publish = true
 
   pkg {
