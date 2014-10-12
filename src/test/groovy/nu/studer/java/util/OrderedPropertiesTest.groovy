@@ -37,7 +37,19 @@ class OrderedPropertiesTest extends Specification {
     assert props.getProperty("bbb", "222") == "222"
   }
 
-  def "has property"() {
+  def "remove property"() {
+    setup:
+    props.setProperty("aaa", "111")
+
+    when:
+    def previousValue = props.removeProperty("aaa")
+
+    then:
+    assert previousValue == "111"
+    assert !props.hasProperty("aaa")
+  }
+
+  def "contains property"() {
     setup:
     props.setProperty("aaa", "111")
     assert props.containsProperty("aaa")

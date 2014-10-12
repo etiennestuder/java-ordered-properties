@@ -93,6 +93,18 @@ public final class OrderedProperties implements Serializable {
     }
 
     /**
+     * Removes the property with the specified key, if it is present. Returns
+     * the value of the property, or <tt>null</tt> if there was no property with
+     * the specified key.
+     *
+     * @param key the key of the property to remove
+     * @return the previous value of the property, or <tt>null</tt> if there was no property with the specified key
+     */
+    public String removeProperty(String key) {
+        return properties.remove(key);
+    }
+
+    /**
      * Returns <tt>true</tt> if there is a property with the specified key.
      *
      * @param key the key whose presence is to be tested
