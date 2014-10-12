@@ -467,6 +467,37 @@ a=111
     assert props.hashCode() != otherProps.hashCode()
   }
 
+  def "copy constructor when default ordering is applied"() {
+    setup:
+    props.setProperty("bbb", "222")
+    props.setProperty("ccc", "333")
+    props.setProperty("aaa", "111")
+
+    when:
+    OrderedProperties copy = OrderedProperties.copyOf(props)
+    copy.removeProperty("ccc")
+
+    then:
+    copy.stringPropertyNames() == ["bbb", "aaa"] as Set
+    props.stringPropertyNames() == ["bbb", "ccc", "aaa"] as Set
+  }
+
+  def "copy constructor when custom ordering is applied"() {
+    setup:
+    def props = new OrderedPropertiesBuilder().withOrdering(String.CASE_INSENSITIVE_ORDER).build()
+    props.setProperty("bbb", "222")
+    props.setProperty("ccc", "333")
+    props.setProperty("aaa", "111")
+
+    when:
+    OrderedProperties copy = OrderedProperties.copyOf(props)
+    copy.removeProperty("ccc")
+
+    then:
+    copy.stringPropertyNames() == ["aaa", "bbb"] as Set
+    props.stringPropertyNames() == ["aaa", "bbb", "ccc"] as Set
+  }
+
   private static Reader asReader(String text) {
     new StringReader(text)
   }

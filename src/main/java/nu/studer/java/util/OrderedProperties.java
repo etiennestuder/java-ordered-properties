@@ -271,6 +271,32 @@ public final class OrderedProperties implements Serializable {
     }
 
     /**
+     * Creates a new instance that will have both the same property entries and
+     * the same behavior as the given source.
+     * <p/>
+     * Note that the source instance and the copy instance will share the same
+     * comparator instance if a custom ordering had been configured on the source.
+     *
+     * @param source the source to copy from
+     * @return the copy
+     */
+    public static OrderedProperties copyOf(OrderedProperties source) {
+        // create a copy that has the same behaviour
+        OrderedPropertiesBuilder builder = new OrderedPropertiesBuilder();
+        builder.withSuppressDateInComment(source.suppressDate);
+        if (source.properties instanceof TreeMap) {
+            builder.withOrdering(((TreeMap<String, String>) source.properties).comparator());
+        }
+        OrderedProperties result = builder.build();
+
+        // copy the properties from the source to the target
+        for (Map.Entry<String, String> entry : source.entrySet()) {
+            result.setProperty(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
+
+    /**
      * Builder for {@link OrderedProperties} instances.
      */
     public static final class OrderedPropertiesBuilder {
