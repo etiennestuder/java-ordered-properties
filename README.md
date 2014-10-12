@@ -13,6 +13,8 @@ As additional functionality, the properties are read, stored, and iterated in a 
 order. Also, an option is provided to omit the current date from being persisted as a comment 
 to the specified properties file.
 
+The java-ordered-properties dependency is hosted at [Bintray's JCenter](https://bintray.com/etienne/java-utilities/java-ordered-properties).
+
 # Goals
 
 The goals of this class are the following:
