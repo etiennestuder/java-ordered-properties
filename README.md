@@ -3,7 +3,7 @@ java-ordered-properties
 
 # Overview
 
-Replacement for the JDK class `java.util.Properties`.
+Alternative to the JDK class `java.util.Properties`.
 
 The provided class `nu.studer.java.util.OrderedProperties` fixes the design flaw of using 
 inheritance over composition, while keeping up the same APIs as the original class. In contrary 

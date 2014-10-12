@@ -24,7 +24,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 /**
- * This class provides a replacement for the JDK's {@link Properties} class. It fixes the design flaw of using
+ * This class provides an alternative to the JDK's {@link Properties} class. It fixes the design flaw of using
  * inheritance over composition, while keeping up the same APIs as the original class. Keys and values are
  * guaranteed to be of type {@link String}.
  * <p/>

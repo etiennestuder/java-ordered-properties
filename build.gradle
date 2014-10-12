@@ -61,7 +61,7 @@ bintray {
   pkg {
     repo = 'java-utilities'
     name = 'java-ordered-properties'
-    desc = 'Replacement for the JDK class java.util.Properties.'
+    desc = 'Alternative to the JDK class java.util.Properties.'
     websiteUrl = 'https://github.com/etiennestuder/java-ordered-properties'
     issueTrackerUrl = 'https://github.com/etiennestuder/java-ordered-properties/issues'
     vcsUrl = 'https://github.com/etiennestuder/java-ordered-properties.git'
