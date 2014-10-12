@@ -56,10 +56,11 @@ properties.load(new FileInputStream(new File("~/some.properties")));
 String value = properties.getProperty("someKey", "someDefaultValue");
 ```
 
-You can also test for the presence of a given property.
+You can also test for the presence of a given property, and remove a given property.
 
 ```java
 boolean isPresent = properties.containsProperty("someKey");
+String value = properties.removeProperty("someKey");
 ```
 
 ## New functionality
@@ -72,6 +73,12 @@ OrderedPropertiesBuilder builder = new OrderedPropertiesBuilder();
 builder.withOrdering(String.CASE_INSENSITIVE_ORDER);
 builder.withSuppressDateInComment(true);
 OrderedProperties properties = builder.build();
+```
+
+An instance of `nu.studer.java.util.OrderedProperties` can be copied into a new instance through a static factory method.
+ 
+```java
+OrderedProperties copy = OrderedProperties.copyOf(sourceOrderedProperties);
 ```
 
 If needed for compatibility with existing APIs that consume JDK properties, an instance of 
