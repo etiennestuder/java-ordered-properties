@@ -21,7 +21,7 @@ dependencies {
 }
 
 group = 'nu.studer'
-version = '1.0.1'
+version = '1.0.2'
 
 task sourcesJar(type: Jar) {
   description = 'Assembles a jar archive containing the main source code.'
