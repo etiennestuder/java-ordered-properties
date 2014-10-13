@@ -8,6 +8,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.Writer;
@@ -211,6 +213,22 @@ public final class OrderedProperties implements Serializable {
     public void storeToXML(OutputStream stream, String comment, String encoding) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
         customProperties.storeToXML(stream, comment, encoding);
+    }
+
+    /**
+     * See {@link Properties#list(PrintStream)}.
+     */
+    public void list(PrintStream stream) {
+        CustomProperties customProperties = new CustomProperties(this.properties);
+        customProperties.list(stream);
+    }
+
+    /**
+     * See {@link Properties#list(PrintWriter)}.
+     */
+    public void list(PrintWriter writer) {
+        CustomProperties customProperties = new CustomProperties(this.properties);
+        customProperties.list(writer);
     }
 
     /**
