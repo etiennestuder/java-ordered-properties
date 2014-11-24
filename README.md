@@ -11,7 +11,7 @@ to the original implementation, keys and values are guaranteed to always be of t
 
 As additional functionality, the properties are read, stored, and iterated in a well-defined 
 order. Also, an option is provided to omit the current date from being persisted as a comment 
-to the specified properties file.
+in the specified properties file.
 
 The java-ordered-properties dependency is hosted at [Bintray's JCenter](https://bintray.com/etienne/java-utilities/java-ordered-properties).
 
