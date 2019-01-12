@@ -1,23 +1,20 @@
-buildscript {
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayPluginVersion"
-  }
+plugins {
+  id 'com.gradle.build-scan' version '1.16'
+  id 'nu.studer.credentials' version '1.0.5'
+  id 'com.jfrog.bintray' version '1.8.4'
+  id 'maven-publish'
+  id 'groovy'
 }
-
-apply plugin: 'groovy'
-apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
 
 repositories {
   jcenter()
 }
 
 dependencies {
-  testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
-  testCompile "org.spockframework:spock-core:$spockVersion"
+  testImplementation 'org.codehaus.groovy:groovy-all:2.4.16'
+  testImplementation('org.spockframework:spock-core:1.0-groovy-2.4') {
+    exclude module: 'groovy-all'
+  }
 }
 
 group = 'nu.studer'
@@ -50,8 +47,8 @@ publishing {
 }
 
 bintray {
-  user = "$BINTRAY_USER"
-  key = "$BINTRAY_API_KEY"
+  user = credentials.BINTRAY_USER
+  key = credentials.BINTRAY_API_KEY
 
   publications = ['java']
 
