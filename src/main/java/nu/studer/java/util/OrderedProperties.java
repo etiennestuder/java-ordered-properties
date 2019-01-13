@@ -396,6 +396,7 @@ public final class OrderedProperties implements Serializable {
             return new LinkedHashSet<Object>(targetProperties.keySet());
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public Set<Map.Entry<Object, Object>> entrySet() {
             Set entrySet = targetProperties.entrySet();
