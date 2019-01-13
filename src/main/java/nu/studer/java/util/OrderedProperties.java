@@ -396,6 +396,12 @@ public final class OrderedProperties implements Serializable {
             return new LinkedHashSet<Object>(targetProperties.keySet());
         }
 
+        @Override
+        public Set<Map.Entry<Object, Object>> entrySet() {
+            Set entrySet = targetProperties.entrySet();
+            return (Set<Map.Entry<Object, Object>>) entrySet;
+        }
+
     }
 
     /**

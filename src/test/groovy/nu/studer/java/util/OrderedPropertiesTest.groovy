@@ -95,6 +95,7 @@ c=333
 a=111
 d=
 """
+
     when:
     props.load(stream)
 
@@ -116,6 +117,7 @@ c=333
 a=111
 d=
 """
+
     when:
     props.load(reader)
 
@@ -166,7 +168,7 @@ d=
     props.store(stream, null)
 
     then:
-    stream.toString() endsWith """
+    stream.toString() endsWith """\
 b=222
 c=333
 a=111
@@ -186,7 +188,7 @@ d=
     props.store(writer, null)
 
     then:
-    writer.toString() endsWith """
+    writer.toString() endsWith """\
 b=222
 c=333
 a=111
@@ -206,6 +208,7 @@ d=
     props.storeToXML(stream, "foo")
 
     then:
+    // JDK<9 generates different XML output than JDK>=9
     stream.toString() == """\
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
@@ -215,6 +218,17 @@ d=
 <entry key="c">333</entry>
 <entry key="a">111</entry>
 <entry key="d"/>
+</properties>
+""" ||
+            stream.toString() == """\
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>foo</comment>
+<entry key="b">222</entry>
+<entry key="c">333</entry>
+<entry key="a">111</entry>
+<entry key="d"></entry>
 </properties>
 """
   }
@@ -231,6 +245,7 @@ d=
     props.storeToXML(stream, "foo", "ISO-8859-1")
 
     then:
+    // JDK<9 generates different XML output than JDK>=9
     stream.toString() == """\
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
@@ -240,6 +255,16 @@ d=
 <entry key="c">333</entry>
 <entry key="a">111</entry>
 <entry key="d"/>
+</properties>
+""" ||
+            stream.toString() == """<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>foo</comment>
+<entry key="b">222</entry>
+<entry key="c">333</entry>
+<entry key="a">111</entry>
+<entry key="d"></entry>
 </properties>
 """
   }
@@ -306,7 +331,7 @@ d=
     this.props.store(stream, null)
 
     then:
-    stream.toString() endsWith """
+    stream.toString() endsWith """\
 a=111
 b=222
 c=333
