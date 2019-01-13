@@ -35,6 +35,10 @@ task docsJar(type: Jar) {
   from javadoc
 }
 
+javadoc {
+  options.addStringOption('Xdoclint:none', '-quiet')
+}
+
 publishing {
   publications {
     java(MavenPublication) {
