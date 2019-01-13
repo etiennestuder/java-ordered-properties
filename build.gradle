@@ -18,7 +18,7 @@ dependencies {
 }
 
 group = 'nu.studer'
-version = '1.0.2'
+version = '1.0.3-DEV'
 
 sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
