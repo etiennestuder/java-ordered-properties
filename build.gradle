@@ -59,8 +59,8 @@ bintray {
 
   publications = ['java']
 
-  dryRun = true
   publish = true
+  dryRun = false
 
   pkg {
     repo = 'java-utilities'
