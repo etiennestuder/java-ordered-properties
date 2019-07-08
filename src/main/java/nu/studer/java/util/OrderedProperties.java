@@ -13,17 +13,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.Writer;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.InvalidPropertiesFormatException;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * This class provides an alternative to the JDK's {@link Properties} class. It fixes the design flaw of using
@@ -52,7 +42,7 @@ import java.util.Vector;
  * @see Properties
  */
 @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-public final class OrderedProperties implements Serializable {
+public final class OrderedProperties implements Serializable, Map<String, String> {
 
     private static final long serialVersionUID = 1L;
 
@@ -127,6 +117,51 @@ public final class OrderedProperties implements Serializable {
      */
     public boolean isEmpty() {
         return properties.isEmpty();
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+        return properties.containsKey(key);
+    }
+
+    @Override
+    public boolean containsValue(Object value) {
+        return properties.containsValue(value);
+    }
+
+    @Override
+    public String get(Object key) {
+        return properties.get(key);
+    }
+
+    @Override
+    public String put(String key, String value) {
+        return properties.put(key, value);
+    }
+
+    @Override
+    public String remove(Object key) {
+        return properties.remove(key);
+    }
+
+    @Override
+    public void putAll(Map<? extends String, ? extends String> m) {
+        properties.putAll(m);
+    }
+
+    @Override
+    public void clear() {
+        properties.clear();
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return properties.keySet();
+    }
+
+    @Override
+    public Collection<String> values() {
+        return properties.values();
     }
 
     /**

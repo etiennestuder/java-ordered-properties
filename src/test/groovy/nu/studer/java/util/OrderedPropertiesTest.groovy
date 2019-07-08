@@ -72,11 +72,42 @@ class OrderedPropertiesTest extends Specification {
     }
   }
 
+  def "OrderedProperties has same behavior as java.util.Properties via indexer"() {
+    setup:
+    def jdkProps = new Properties()
+
+    [props, jdkProps].each {
+      it["aaa"] = "111"
+    }
+
+    [props, jdkProps].each {
+      assert it["aaa"] == "111"
+      assert it.getProperty("aaa", "222") == "111"
+      assert it["bbb"] == null
+      assert it.getProperty("bbb", "222") == "222"
+    }
+  }
+
   def "properties remain ordered when getting the entrySet"() {
     setup:
     props.setProperty("b", "222")
     props.setProperty("c", "333")
     props.setProperty("a", "111")
+
+    when:
+    Set<Map.Entry<String, String>> entrySet = props.entrySet()
+
+    then:
+    assert entrySet.size() == 3
+    assert entrySet.collect { def entry -> entry.key } == ["b", "c", "a"]
+    assert entrySet.collect { def entry -> entry.value } == ["222", "333", "111"]
+  }
+
+  def "properties remain ordered when getting the entrySet via indexer"() {
+    setup:
+    props["b"] = "222"
+    props["c"] = "333"
+    props["a"] = "111"
 
     when:
     Set<Map.Entry<String, String>> entrySet = props.entrySet()
