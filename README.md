@@ -17,6 +17,12 @@ in the specified properties file.
 
 The java-ordered-properties dependency is hosted at [Bintray's JCenter](https://bintray.com/etienne/java-utilities/java-ordered-properties).
 
+## Build scan
+
+Recent build scan: https://gradle.com/s/neny3ulp4s3mc
+
+Find out more about build scans for Gradle and Maven at https://scans.gradle.com.
+
 # Goals
 
 The goals of this class are the following:
