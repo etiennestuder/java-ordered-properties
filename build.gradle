@@ -1,6 +1,5 @@
 plugins {
-  id 'com.gradle.build-scan' version '1.16'
-  id 'nu.studer.credentials' version '1.0.5'
+  id 'nu.studer.credentials' version '1.0.7'
   id 'com.jfrog.bintray' version '1.8.4'
   id 'maven-publish'
   id 'groovy'
