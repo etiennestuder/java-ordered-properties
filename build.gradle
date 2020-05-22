@@ -22,6 +22,16 @@ dependencies {
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
+test {
+    useJUnitPlatform() {
+        includeEngines 'junit-vintage'
+    }
+}
+
+javadoc {
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
 task sourcesJar(type: Jar) {
   description = 'Assembles a jar archive containing the main source code.'
   group = 'build'
@@ -32,17 +42,6 @@ task docsJar(type: Jar) {
   description = 'Assembles a jar archive containing the documentation for the main source code.'
   group = 'build'
   from javadoc
-}
-
-javadoc {
-  options.addStringOption('Xdoclint:none', '-quiet')
-}
-
-test {
-    maxParallelForks = 2
-    useJUnitPlatform() {
-        includeEngines 'junit-vintage'
-    }
 }
 
 publishing {
