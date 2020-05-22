@@ -4,6 +4,11 @@ plugins {
 
 gradleEnterprise {
     buildScan {
+        def acceptTOSProp = 'java-ordered-properties.acceptGradleTOS'
+        if (settings.hasProperty(acceptTOSProp) && Boolean.valueOf(settings.getProperty(acceptTOSProp))) {
+            termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+            termsOfServiceAgree = 'yes'
+        }
         publishAlways()
         obfuscation {
             ipAddresses { addresses -> addresses.collect { address -> '0.0.0.0' } }
