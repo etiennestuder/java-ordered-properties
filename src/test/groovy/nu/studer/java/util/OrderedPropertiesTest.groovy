@@ -196,7 +196,26 @@ d=
 """
   }
 
-  def "properties remain ordered when writing to stream as xml"() {
+    def "unicode characters are escaped when writing to stream"() {
+        setup:
+        def props = new OrderedPropertiesBuilder().withSuppressDateInComment(true).build()
+        props.setProperty("key space", "äöüàñ space")
+        props.setProperty("äöüàñ space", "value space")
+        def outputStream = new ByteArrayOutputStream()
+
+        when:
+        props.store(outputStream, "Comment")
+        outputStream.flush()
+
+        then:
+        outputStream.toString("ISO-8859-1") == """\
+#Comment
+key\\ space=\\u00E4\\u00F6\\u00FC\\u00E0\\u00F1 space
+\\u00E4\\u00F6\\u00FC\\u00E0\\u00F1\\ space=value space
+"""
+    }
+
+    def "properties remain ordered when writing to stream as xml"() {
     setup:
     props.setProperty("b", "222")
     props.setProperty("c", "333")

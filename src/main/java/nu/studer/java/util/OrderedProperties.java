@@ -13,6 +13,8 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -181,7 +183,15 @@ public final class OrderedProperties implements Serializable {
     public void store(OutputStream stream, String comments) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
         if (suppressDate) {
-            customProperties.store(new DateSuppressingPropertiesBufferedWriter(new OutputStreamWriter(stream, "8859_1")), comments);
+            try {
+                Method method = Properties.class.getDeclaredMethod("store0", BufferedWriter.class, String.class, boolean.class);
+                method.setAccessible(true);
+                method.invoke(customProperties, new DateSuppressingPropertiesBufferedWriter(new OutputStreamWriter(stream, "8859_1")), comments, true);
+            } catch (NoSuchMethodException | IllegalAccessException | SecurityException e) {
+                customProperties.store(new DateSuppressingPropertiesBufferedWriter(new OutputStreamWriter(stream, "8859_1")), comments);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e.getCause());
+            }
         } else {
             customProperties.store(stream, comments);
         }
