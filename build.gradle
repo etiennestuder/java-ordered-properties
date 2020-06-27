@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'nu.studer'
-version = '1.0.4-DEV'
+version = '1.0.4'
 
 repositories {
     jcenter()
