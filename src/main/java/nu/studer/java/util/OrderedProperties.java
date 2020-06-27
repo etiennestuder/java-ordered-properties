@@ -53,7 +53,6 @@ import java.util.Vector;
  *
  * @see Properties
  */
-@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 public final class OrderedProperties implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -400,7 +399,6 @@ public final class OrderedProperties implements Serializable {
             return new Vector<Object>(targetProperties.keySet()).elements();
         }
 
-        @SuppressWarnings("NullableProblems")
         @Override
         public Set<Object> keySet() {
             return new LinkedHashSet<>(targetProperties.keySet());
@@ -409,7 +407,7 @@ public final class OrderedProperties implements Serializable {
         @SuppressWarnings("unchecked")
         @Override
         public Set<Map.Entry<Object, Object>> entrySet() {
-            Set entrySet = targetProperties.entrySet();
+            Set<?> entrySet = targetProperties.entrySet();
             return (Set<Map.Entry<Object, Object>>) entrySet;
         }
 
@@ -431,7 +429,6 @@ public final class OrderedProperties implements Serializable {
             super(out);
         }
 
-        @SuppressWarnings("NullableProblems")
         @Override
         public void write(String string) throws IOException {
             if (currentComment != null) {
