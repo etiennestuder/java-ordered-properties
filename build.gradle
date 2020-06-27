@@ -16,7 +16,6 @@ dependencies {
     testImplementation('org.spockframework:spock-core:2.0-M3-groovy-3.0') {
         exclude module: 'groovy-all'
     }
-    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.6.2'
 }
 
 java {
@@ -25,9 +24,7 @@ java {
 }
 
 test {
-    useJUnitPlatform() {
-        includeEngines 'junit-vintage'
-    }
+    useJUnitPlatform()
 }
 
 javadoc {
