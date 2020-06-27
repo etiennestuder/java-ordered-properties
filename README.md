@@ -37,7 +37,8 @@ The goals of this class are the following:
  
 # Functionality
 
-All functionality is encapsulated in the class `nu.studer.java.util.OrderedProperties`.
+All functionality is encapsulated in the class `nu.studer.java.util.OrderedProperties`. The class has no third-party
+dependencies outside of JDK classes.
 
 # Design
 
