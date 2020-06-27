@@ -37,8 +37,7 @@ The goals of this class are the following:
  
 # Functionality
 
-All functionality is encapsulated in the class `nu.studer.java.util.OrderedProperties`. The class has no third-party
-dependencies outside of JDK classes.
+All functionality is encapsulated in the class `nu.studer.java.util.OrderedProperties`.
 
 # Design
 
@@ -50,6 +49,8 @@ is achieved by a decorating `java.io.BufferedWriter`. Reading properties to and 
 
 The class `nu.studer.java.util.OrderedProperties` implements `equals` and `hashCode` based on the properties 
 and the order in which they appear. The class also fulfills the contract of `java.io.Serializable`. 
+
+The class `nu.studer.java.util.OrderedProperties` does not rely on any third-party dependencies.
 
 # Usage
 
