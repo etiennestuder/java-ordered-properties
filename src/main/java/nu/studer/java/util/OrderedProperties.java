@@ -182,17 +182,41 @@ public final class OrderedProperties implements Serializable {
     public void store(OutputStream stream, String comments) throws IOException {
         CustomProperties customProperties = new CustomProperties(this.properties);
         if (suppressDate) {
-            try {
-                Method method = Properties.class.getDeclaredMethod("store0", BufferedWriter.class, String.class, boolean.class);
-                method.setAccessible(true);
-                method.invoke(customProperties, new DateSuppressingPropertiesBufferedWriter(new OutputStreamWriter(stream, "8859_1")), comments, true);
-            } catch (NoSuchMethodException | IllegalAccessException | SecurityException e) {
-                customProperties.store(new DateSuppressingPropertiesBufferedWriter(new OutputStreamWriter(stream, "8859_1")), comments);
-            } catch (InvocationTargetException e) {
-                throw new RuntimeException(e.getCause());
-            }
+            store(stream, comments, customProperties);
         } else {
             customProperties.store(stream, comments);
+        }
+    }
+
+    private void store(OutputStream stream, String comments, CustomProperties properties) throws IOException {
+        if (commentRequiresEscaping(comments) || propertiesRequireEscaping(properties)) {
+            storeViaReflection(stream, comments, properties);
+        } else {
+            properties.store(new DateSuppressingPropertiesBufferedWriter(new OutputStreamWriter(stream, "8859_1")), comments);
+        }
+    }
+
+    private static boolean commentRequiresEscaping(String comments) {
+        return comments != null && comments.chars().anyMatch(c -> c > '\u00ff');
+    }
+
+    @SuppressWarnings("Convert2MethodRef")
+    private static boolean propertiesRequireEscaping(CustomProperties properties) {
+        Map<String, String> p = properties.targetProperties;
+        return !p.isEmpty() && (p.keySet().stream().anyMatch(k -> keyValueRequiresEscaping(k)) || p.values().stream().anyMatch(v -> keyValueRequiresEscaping(v)));
+    }
+
+    private static boolean keyValueRequiresEscaping(String s) {
+        return s != null && s.chars().anyMatch(c -> (c < 0x0020) || (c > 0x007e));
+    }
+
+    private static void storeViaReflection(OutputStream stream, String comments, CustomProperties customProperties) throws IOException {
+        try {
+            Method method = Properties.class.getDeclaredMethod("store0", BufferedWriter.class, String.class, boolean.class);
+            method.setAccessible(true);
+            method.invoke(customProperties, new DateSuppressingPropertiesBufferedWriter(new OutputStreamWriter(stream, "8859_1")), comments, true);
+        } catch (NoSuchMethodException | IllegalAccessException | SecurityException | InvocationTargetException e) {
+            throw new RuntimeException(e.getCause());
         }
     }
 
