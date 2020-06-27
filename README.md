@@ -112,7 +112,7 @@ Both feedback and contributions are very welcome.
 
 # Acknowledgements
 
-None, yet.
++ [joschi](https://github.com/joschi) (issue #4 that surfaces a problem with escaping of non-latin characters)
 
 # License
 
