@@ -15,7 +15,7 @@ As additional functionality, the properties are read, stored, and iterated in a 
 order. Also, an option is provided to omit the current date from being persisted as a comment 
 in the specified properties file.
 
-The java-ordered-properties dependency is hosted at [Bintray's JCenter](https://bintray.com/etienne/java-utilities/java-ordered-properties).
+The java-ordered-properties dependency is hosted at [Maven Central](https://search.maven.org/search?q=a:java-ordered-properties) and at [Bintray's JCenter](https://bintray.com/etienne/java-utilities/java-ordered-properties).
 
 ## Build scan
 
