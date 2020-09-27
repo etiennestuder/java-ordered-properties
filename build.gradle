@@ -1,6 +1,7 @@
 plugins {
     id 'nu.studer.credentials' version '2.1'
     id 'com.jfrog.bintray' version '1.8.5'
+    id 'org.nosphere.gradle.github.actions' version '1.2.0'
     id 'maven-publish'
     id 'groovy'
 }
