@@ -18,4 +18,4 @@ jobs:
        - name: Build with Gradle
          uses: eskatos/gradle-command-action@v1
          with:
-           arguments: build testAll -Pjava-ordered-properties.acceptGradleTOS=true
+           arguments: build -Pjava-ordered-properties.acceptGradleTOS=true
