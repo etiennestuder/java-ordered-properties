@@ -14,6 +14,8 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'org.codehaus.groovy:groovy:2.5.14'  // workaround for configuration cache
+
     testImplementation('org.spockframework:spock-core:2.0-M4-groovy-3.0') {
         exclude module: 'groovy-all'
     }
