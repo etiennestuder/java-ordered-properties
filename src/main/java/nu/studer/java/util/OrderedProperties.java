@@ -86,7 +86,7 @@ public final class OrderedProperties implements Serializable {
     public String getProperty(String key, String defaultValue) {
         String value = properties.get(key);
         return (value == null) ? defaultValue : value;
-    }
+    
 
     /**
      * See {@link Properties#setProperty(String, String)}.
