@@ -10,7 +10,7 @@ group = 'nu.studer'
 version = '1.0.5-DEV'
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
