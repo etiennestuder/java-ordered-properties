@@ -11,6 +11,7 @@ gradleEnterprise {
             termsOfServiceAgree = 'yes'
         }
         publishAlways()
+        captureTaskInputFiles = true
         obfuscation {
             ipAddresses { addresses -> addresses.collect { address -> '0.0.0.0' } }
         }
