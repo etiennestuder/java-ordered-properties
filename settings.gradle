@@ -23,4 +23,29 @@ buildCache {
     local {
         enabled = true
     }
+    def remotePush = providers.environmentVariable('GRADLE_CACHE_REMOTE_PUSH').forUseAtConfigurationTime()
+        .orElse(providers.systemProperty('enableBuildCachePush').forUseAtConfigurationTime())
+        .map { it as boolean }
+        .getOrElse(false)
+    def ci = providers.environmentVariable('CI').forUseAtConfigurationTime().map { it as boolean }
+        .getOrElse(false)
+    def username = providers.environmentVariable('GRADLE_CACHE_REMOTE_USERNAME').forUseAtConfigurationTime()
+        .orElse(providers.systemProperty('buildCacheUsername').forUseAtConfigurationTime())
+        .getOrNull()
+    def password = providers.environmentVariable('GRADLE_CACHE_REMOTE_PASSWORD').forUseAtConfigurationTime()
+        .orElse(providers.systemProperty('buildCachePassword').forUseAtConfigurationTime())
+        .getOrNull()
+    if (remotePush || username || password) {
+        remote(HttpBuildCache) {
+            url = providers.environmentVariable('GRADLE_CACHE_REMOTE_URL').forUseAtConfigurationTime()
+                .orElse(providers.systemProperty('buildCacheUrl').forUseAtConfigurationTime())
+                .getOrElse('https://e.grdev.net/cache/')
+
+            push = remotePush && ci
+            credentials {
+                it.username = username
+                it.password = password
+            }
+        }
+    }
 }
