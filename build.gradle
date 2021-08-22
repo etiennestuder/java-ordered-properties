@@ -1,5 +1,4 @@
 plugins {
-    id 'nu.studer.credentials' version '2.1'
     id 'org.nosphere.gradle.github.actions' version '1.2.0'
     id 'maven-publish'
     id 'groovy'
