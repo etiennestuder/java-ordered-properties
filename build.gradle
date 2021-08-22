@@ -15,6 +15,13 @@ dependencies {
     testImplementation('org.spockframework:spock-core:2.0-groovy-3.0')
 }
 
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs <<
+        "-Werror" <<
+        "-Xlint:all" <<
+        "-Xlint:-serial"
+}
+
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
