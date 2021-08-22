@@ -12,8 +12,6 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.codehaus.groovy:groovy:3.0.8'  // workaround for configuration cache
-
     testImplementation('org.spockframework:spock-core:2.0-groovy-3.0')
 }
 
