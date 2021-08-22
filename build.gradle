@@ -15,7 +15,7 @@ dependencies {
     testImplementation('org.spockframework:spock-core:2.0-groovy-3.0')
 }
 
-tasks.withType(JavaCompile).configureEach {
+tasks.withType(AbstractCompile).configureEach {
     options.compilerArgs <<
         "-Werror" <<
         "-Xlint:all" <<
