@@ -4,6 +4,8 @@ on: [push, workflow_dispatch]
 jobs:
   build:
      runs-on: ubuntu-latest
+     env:
+       GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
      strategy:
         matrix:
           java: [ 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ]
@@ -18,4 +20,4 @@ jobs:
        - name: Build with Gradle
          uses: gradle/gradle-build-action@v2
          with:
-           arguments: build -Pjava-ordered-properties.acceptGradleTOS=true
+           arguments: build
