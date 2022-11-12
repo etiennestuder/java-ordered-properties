@@ -28,8 +28,16 @@ tasks.withType(AbstractCompile).configureEach {
         "-Xlint:-serial"
 }
 
-test {
+tasks.withType(Test).configureEach {
+    maxParallelForks = 1 // there is currently only a single test class
     useJUnitPlatform()
+
+    String testJavaRuntimeVersion = findProperty('testJavaRuntimeVersion') ?: '8'
+
+    javaLauncher.set(javaToolchains.launcherFor { spec ->
+        spec.languageVersion.set(JavaLanguageVersion.of(testJavaRuntimeVersion))
+        buildScan.value(identityPath.path + "#jvmVersion", testJavaRuntimeVersion)
+    } as Provider<? extends JavaLauncher>)
 }
 
 javadoc {
