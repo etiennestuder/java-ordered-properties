@@ -38,6 +38,10 @@ tasks.withType(Test).configureEach {
         spec.languageVersion.set(JavaLanguageVersion.of(testJavaRuntimeVersion))
         buildScan.value(identityPath.path + "#jvmVersion", testJavaRuntimeVersion)
     } as Provider<? extends JavaLauncher>)
+
+    if (testJavaRuntimeVersion.toInteger() >= 16) { // required due to tightened reflective access in JDK 16 and higher
+        jvmArgs '--add-opens', 'java.base/java.util=ALL-UNNAMED'
+    }
 }
 
 javadoc {
