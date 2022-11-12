@@ -3,13 +3,11 @@ on: [push, workflow_dispatch]
 
 jobs:
   build:
+     name: Building on Java ${{ matrix.java }}
      runs-on: ubuntu-latest
-     env:
-       GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
      strategy:
         matrix:
           java: [ 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ]
-     name: Building on Java ${{ matrix.java }}
      steps:
        - name: Check out project
          uses: actions/checkout@v2
