@@ -4,6 +4,7 @@ on: [push, workflow_dispatch]
 jobs:
   build:
      name: Test JVM (${{ matrix.java-version }})
+     continue-on-error: true
      runs-on: ubuntu-latest
      strategy:
         matrix:
