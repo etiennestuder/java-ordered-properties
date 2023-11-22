@@ -22,7 +22,6 @@ buildCache {
     local {
         enabled = true
     }
-
     remote(gradleEnterprise.buildCache) {
         enabled = true
         push = isCI
