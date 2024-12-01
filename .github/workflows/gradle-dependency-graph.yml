@@ -1,4 +1,4 @@
-name: Submit Dependency Graph
+name: Dependency Graph Submission
 on:
   push:
     branches: [ 'main' ]
