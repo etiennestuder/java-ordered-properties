@@ -29,5 +29,4 @@ buildCache {
     }
 }
 
-
 rootProject.name = 'java-ordered-properties'
