@@ -32,6 +32,7 @@ tasks.withType(AbstractCompile).configureEach {
         "-Xlint:-serial"
 }
 
+def dvBuildScan = develocity.buildScan
 tasks.withType(Test).configureEach {
     maxParallelForks = 1 // there is currently only a single test class
     useJUnitPlatform()
@@ -40,7 +41,7 @@ tasks.withType(Test).configureEach {
 
     javaLauncher.set(javaToolchains.launcherFor { spec ->
         spec.languageVersion.set(JavaLanguageVersion.of(testJavaRuntimeVersion))
-        buildScan.value(identityPath.path + "#jvmVersion", testJavaRuntimeVersion)
+        dvBuildScan.value(identityPath.path + "#jvmVersion", testJavaRuntimeVersion)
     } as Provider<? extends JavaLauncher>)
 
     if (testJavaRuntimeVersion.toInteger() >= 16) { // required due to tightened reflective access in JDK 16 and higher
