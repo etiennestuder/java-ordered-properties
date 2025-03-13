@@ -4,6 +4,7 @@
 
 java-ordered-properties
 =======================
+> This single-class library is no longer maintained. The class has not changed since 2020 and still works from Java 8 to Java 23.
 
 > The work on this software project is in no way associated with my employer nor with the role I'm having at my employer. Any requests for changes will be decided upon exclusively by myself based on my personal preferences. I maintain this project as much or as little as my spare time permits.
 
@@ -19,7 +20,7 @@ As additional functionality, the properties are read, stored, and iterated in a 
 order. Also, an option is provided to omit the current date from being persisted as a comment
 in the specified properties file.
 
-The java-ordered-properties dependency is hosted at [Maven Central](https://search.maven.org/search?q=a:java-ordered-properties) and at [Bintray's JCenter](https://bintray.com/etienne/java-utilities/java-ordered-properties).
+The java-ordered-properties dependency is hosted at [Maven Central](https://search.maven.org/search?q=a:java-ordered-properties).
 
 ## Build scan
 
